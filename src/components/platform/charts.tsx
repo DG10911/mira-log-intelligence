@@ -11,10 +11,21 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { LineChart as LineIcon } from "lucide-react";
 
 import { useLiveStore } from "@/lib/store/liveStore";
 
 const AXIS = { stroke: "#ffffff30", fontSize: 11 };
+
+/** Placeholder shown until live WS ticks arrive (cold start / WS down). */
+function ChartWaiting() {
+  return (
+    <div className="flex h-[220px] flex-col items-center justify-center gap-2 text-white/50">
+      <LineIcon className="size-5 animate-pulse" />
+      <span className="text-xs">Waiting for live data…</span>
+    </div>
+  );
+}
 
 export function ErrorRateChart() {
   const points = useLiveStore((s) => s.ratePoints);
@@ -24,24 +35,28 @@ export function ErrorRateChart() {
   }));
   return (
     <ChartFrame title="Error rate %" subtitle="live · 30s window">
-      <ResponsiveContainer width="100%" height={220}>
-        <AreaChart data={data} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
-          <defs>
-            <linearGradient id="er" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#22c55e" stopOpacity={0.5} />
-              <stop offset="100%" stopColor="#22c55e" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-          <XAxis dataKey="time" {...AXIS} tickLine={false} axisLine={false} minTickGap={40} />
-          <YAxis {...AXIS} tickLine={false} axisLine={false} width={36} />
-          <Tooltip
-            contentStyle={{ background: "#0b1f16", border: "1px solid #ffffff20", borderRadius: 8, fontSize: 12 }}
-            labelStyle={{ color: "#ffffff80" }}
-          />
-          <Area type="monotone" dataKey="error_rate" stroke="#22c55e" strokeWidth={2} fill="url(#er)" />
-        </AreaChart>
-      </ResponsiveContainer>
+      {data.length === 0 ? (
+        <ChartWaiting />
+      ) : (
+        <ResponsiveContainer width="100%" height={220}>
+          <AreaChart data={data} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
+            <defs>
+              <linearGradient id="er" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#22c55e" stopOpacity={0.5} />
+                <stop offset="100%" stopColor="#22c55e" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
+            <XAxis dataKey="time" {...AXIS} tickLine={false} axisLine={false} minTickGap={40} />
+            <YAxis {...AXIS} tickLine={false} axisLine={false} width={36} />
+            <Tooltip
+              contentStyle={{ background: "#0b1f16", border: "1px solid #ffffff20", borderRadius: 8, fontSize: 12 }}
+              labelStyle={{ color: "#ffffff80" }}
+            />
+            <Area type="monotone" dataKey="error_rate" stroke="#22c55e" strokeWidth={2} fill="url(#er)" />
+          </AreaChart>
+        </ResponsiveContainer>
+      )}
     </ChartFrame>
   );
 }
@@ -54,18 +69,22 @@ export function EventVolumeChart() {
   }));
   return (
     <ChartFrame title="Total events" subtitle="cumulative ingested">
-      <ResponsiveContainer width="100%" height={220}>
-        <LineChart data={data} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-          <XAxis dataKey="time" {...AXIS} tickLine={false} axisLine={false} minTickGap={40} />
-          <YAxis {...AXIS} tickLine={false} axisLine={false} width={44} />
-          <Tooltip
-            contentStyle={{ background: "#0b1f16", border: "1px solid #ffffff20", borderRadius: 8, fontSize: 12 }}
-            labelStyle={{ color: "#ffffff80" }}
-          />
-          <Line type="monotone" dataKey="events" stroke="#22c55e" strokeWidth={2} dot={false} />
-        </LineChart>
-      </ResponsiveContainer>
+      {data.length === 0 ? (
+        <ChartWaiting />
+      ) : (
+        <ResponsiveContainer width="100%" height={220}>
+          <LineChart data={data} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
+            <XAxis dataKey="time" {...AXIS} tickLine={false} axisLine={false} minTickGap={40} />
+            <YAxis {...AXIS} tickLine={false} axisLine={false} width={44} />
+            <Tooltip
+              contentStyle={{ background: "#0b1f16", border: "1px solid #ffffff20", borderRadius: 8, fontSize: 12 }}
+              labelStyle={{ color: "#ffffff80" }}
+            />
+            <Line type="monotone" dataKey="events" stroke="#22c55e" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
     </ChartFrame>
   );
 }
@@ -83,7 +102,7 @@ export function ChartFrame({
     <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
       <div className="mb-3 flex items-baseline justify-between">
         <h3 className="text-sm font-semibold text-white">{title}</h3>
-        {subtitle && <span className="text-xs text-white/40">{subtitle}</span>}
+        {subtitle && <span className="text-xs text-white/60">{subtitle}</span>}
       </div>
       {children}
     </div>

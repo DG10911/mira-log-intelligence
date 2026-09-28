@@ -16,13 +16,14 @@ export function useEventStream() {
   const wsRef = useRef<WebSocket | null>(null);
   const retryRef = useRef(0);
   const stoppedRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     stoppedRef.current = false;
 
     const connect = () => {
       if (stoppedRef.current) return;
-      setStatus(retryRef.current === 0 ? "connecting" : "connecting");
+      setStatus("connecting");
       let ws: WebSocket;
       try {
         ws = new WebSocket(WS_URL);
@@ -57,12 +58,14 @@ export function useEventStream() {
       if (stoppedRef.current) return;
       const delay = Math.min(1000 * 2 ** retryRef.current, 15000);
       retryRef.current += 1;
-      setTimeout(connect, delay);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(connect, delay);
     };
 
     connect();
     return () => {
       stoppedRef.current = true;
+      if (timerRef.current) clearTimeout(timerRef.current);
       wsRef.current?.close();
     };
   }, [setStatus, push]);
