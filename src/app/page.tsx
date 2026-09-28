@@ -79,7 +79,7 @@ function Orb({ className = "", size = 260 }: { className?: string; size?: number
         height: size,
         background: "radial-gradient(circle at 35% 30%, #86efac 0%, #22c55e 35%, #15803d 70%, transparent 72%)",
         filter: "blur(2px)",
-        boxShadow: "0 0 90px 10px rgba(191,242,58,0.35)",
+        boxShadow: "0 0 90px 10px rgba(34,197,94,0.35)",
       }}
     />
   );
@@ -149,7 +149,7 @@ const CHIPS = ["Patient Registration", "EMR", "Radiology", "Labs", "Pharmacy", "
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mb-4 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-[#101610]/50">
+    <div className="mb-4 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-[#101610]/70">
       <span className="h-px w-8 bg-[#15803d]" />
       <span className="size-1.5 rounded-full bg-[#15803d]" />
       {children}
@@ -176,12 +176,12 @@ export default function Landing() {
           MIRA<span className="text-[#15803d]">.</span>
         </div>
         <nav className="hidden items-center gap-8 text-sm font-medium text-[#101610]/70 md:flex">
-          {["Product", "Use Cases", "How It Works", "Tech Stack", "Docs"].map((n) => (
-            <a key={n} href={`#${n.toLowerCase().replace(/ /g, "-")}`} className="transition-colors hover:text-[#101610]">{n}</a>
+          {["Product", "Use Cases", "How It Works", "Tech Stack"].map((n) => (
+            <a key={n} href={`#${n.toLowerCase().replace(/ /g, "-")}`} className="rounded transition-colors hover:text-[#101610] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eef5ee]">{n}</a>
           ))}
         </nav>
-        <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-full bg-[#101610] px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03]">
-          Launch Console <ArrowUpRight className="size-4" />
+        <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-full bg-[#101610] px-4 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] sm:px-5">
+          <span className="hidden sm:inline">Launch Console</span><span className="sm:hidden">Console</span> <ArrowUpRight className="size-4" />
         </Link>
       </header>
 
@@ -189,15 +189,15 @@ export default function Landing() {
       <section id="product" className="relative z-10 mx-auto grid max-w-7xl items-center gap-8 px-6 pb-10 pt-6 lg:grid-cols-2">
         <div>
           <Eyebrow>Real-Time Log Intelligence</Eyebrow>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className="text-5xl font-extrabold leading-[0.98] tracking-tight md:text-7xl">
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className="text-[2rem] font-extrabold leading-[1.05] tracking-tight sm:text-5xl sm:leading-[0.98] md:text-7xl">
             See the{" "}
             <span className="relative inline-block">
-              <span className="absolute inset-x-[-6px] inset-y-1 -z-0 block bg-[#22c55e]" />
+              <span className="absolute inset-x-[-6px] inset-y-1 z-0 block bg-[#22c55e]" />
               <span className="relative z-10">signal</span>
             </span>{" "}
             before it becomes an incident<span className="text-[#15803d]">.</span>
           </motion.h1>
-          <p className="mt-6 max-w-md text-lg text-[#101610]/60">
+          <p className="mt-6 max-w-md text-lg text-[#101610]/70">
             MIRA monitors your systems, detects abnormal behaviour, correlates security &amp;
             reliability signals, and helps teams resolve issues before they impact care.
           </p>
@@ -205,55 +205,55 @@ export default function Landing() {
             <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-full bg-[#101610] px-7 py-4 text-base font-semibold text-white transition-transform hover:scale-[1.03]">
               Launch Console <ArrowUpRight className="size-4" />
             </Link>
-            <button className="group inline-flex items-center gap-3 text-base font-semibold">
+            <button type="button" className="group inline-flex items-center gap-3 rounded-full text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eef5ee]">
               <span className="grid size-11 place-items-center rounded-full border border-black/20 transition-colors group-hover:bg-[#22c55e]"><Play className="size-4 fill-current" /></span>
               Watch Demo
             </button>
           </div>
         </div>
 
-        <div className="relative h-[520px]">
+        <div className="relative h-[340px] sm:h-[420px] lg:h-[520px]">
           <Orb className="left-10 top-6 opacity-70" size={180} />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><MascotImage pose="hero" size={420} /></div>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.6] sm:scale-90 lg:scale-100"><MascotImage pose="hero" size={420} /></div>
 
-          <FloatCard mouse={mouse} depth={18} className="left-0 top-2 w-64 p-4">
-            <div className="mb-3 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50">Hospital Systems</div>
+          <FloatCard mouse={mouse} depth={18} className="hidden lg:block left-0 top-2 w-64 p-4">
+            <div className="mb-3 font-mono text-[11px] uppercase tracking-widest text-[#101610]/70">Hospital Systems</div>
             <ul className="space-y-2 font-mono text-xs">
               {[["EMR", "HEALTHY"], ["PACS", "MONITORING"], ["LIS", "HEALTHY"], ["PHARMACY", "HEALTHY"], ["BILLING", "MONITORING"]].map(([k, v]) => (
                 <li key={k} className="flex items-center justify-between">
                   <span className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-[#15803d]" />{k}</span>
-                  <span className="text-[#101610]/40">{v}</span>
+                  <span className="text-[#101610]/70">{v}</span>
                 </li>
               ))}
             </ul>
           </FloatCard>
 
-          <FloatCard mouse={mouse} depth={28} className="bottom-24 left-2 w-60 overflow-hidden p-4">
+          <FloatCard mouse={mouse} depth={28} className="hidden lg:block bottom-24 left-2 w-60 overflow-hidden p-4">
             <BorderBeam size={120} duration={6} colorFrom="#15803d" colorTo="#22c55e" />
-            <div className="mb-1 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50"><ArrowUpRight className="size-3 text-[#15803d]" /> Anomaly Detected</div>
+            <div className="mb-1 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#101610]/70"><ArrowUpRight className="size-3 text-[#15803d]" /> Anomaly Detected</div>
             <div className="flex items-center gap-2"><span className="size-2 rounded-full bg-[#15803d]" /><span className="text-lg font-bold">PACS</span></div>
-            <div className="text-sm text-[#101610]/60">Error rate <span className="font-bold text-[#101610]">+742%</span></div>
+            <div className="text-sm text-[#101610]/70">Error rate <span className="font-bold text-[#101610]">+742%</span></div>
             <div className="mt-2 flex h-10 items-end gap-0.5">
               {[3, 4, 3, 5, 6, 5, 7, 9, 8, 12, 14, 13, 16, 18].map((h, i) => (<span key={i} className="w-1.5 rounded-sm bg-[#22c55e]" style={{ height: `${h * 2}px` }} />))}
             </div>
           </FloatCard>
 
-          <FloatCard mouse={mouse} depth={22} className="bottom-16 right-0 w-56 p-4">
-            <div className="mb-2 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50"><span className="mr-1.5 inline-block size-1.5 rounded-full bg-[#15803d]" /> Active Incidents</div>
-            <div className="mb-3 flex items-center justify-between"><span className="text-3xl font-bold">2</span><ArrowRight className="size-4 text-[#101610]/40" /></div>
-            <div className="mb-1 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50">System Health</div>
+          <FloatCard mouse={mouse} depth={22} className="hidden lg:block bottom-16 right-0 w-56 p-4">
+            <div className="mb-2 font-mono text-[11px] uppercase tracking-widest text-[#101610]/70"><span className="mr-1.5 inline-block size-1.5 rounded-full bg-[#15803d]" /> Active Incidents</div>
+            <div className="mb-3 flex items-center justify-between"><span className="text-3xl font-bold">2</span><ArrowRight className="size-4 text-[#101610]/70" /></div>
+            <div className="mb-1 font-mono text-[11px] uppercase tracking-widest text-[#101610]/70">System Health</div>
             <div className="text-2xl font-bold">99.98%</div>
           </FloatCard>
 
-          <FloatCard mouse={mouse} depth={12} className="right-0 top-4 w-44 border-none bg-transparent p-0 shadow-none">
-            <div className="font-mono text-[11px] uppercase leading-relaxed tracking-widest text-[#101610]/50"><span className="mr-2 inline-block h-px w-6 -translate-y-1 bg-[#15803d]" />Secure.<br />Reliable.<br />Observable.</div>
+          <FloatCard mouse={mouse} depth={12} className="hidden lg:block right-0 top-4 w-44 border-none bg-transparent p-0 shadow-none">
+            <div className="font-mono text-[11px] uppercase leading-relaxed tracking-widest text-[#101610]/70"><span className="mr-2 inline-block h-px w-6 -translate-y-1 bg-[#15803d]" />Secure.<br />Reliable.<br />Observable.</div>
           </FloatCard>
         </div>
       </section>
 
       {/* TECH MARQUEE */}
       <div className="relative z-10 border-y border-black/10 bg-white/40 py-4">
-        <p className="mb-3 text-center font-mono text-[11px] uppercase tracking-[0.25em] text-[#101610]/40">Built on a real, production-grade stack</p>
+        <p className="mb-3 text-center font-mono text-[11px] uppercase tracking-[0.25em] text-[#101610]/70">Built on a real, production-grade stack</p>
         <Marquee pauseOnHover className="[--duration:32s]">
           {STACK_MARQUEE.map((c) => (
             <div key={c} className="mx-2 flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-1.5 text-sm font-medium text-[#101610]/70"><span className="size-1.5 rounded-full bg-[#15803d]" /> {c}</div>
@@ -269,7 +269,7 @@ export default function Landing() {
             <h2 className="text-4xl font-extrabold leading-[1.05] tracking-tight md:text-6xl">
               A real-time log intelligence &amp; security observability platform<span className="text-[#15803d]">.</span>
             </h2>
-            <p className="mt-6 max-w-lg text-lg text-[#101610]/60">
+            <p className="mt-6 max-w-lg text-lg text-[#101610]/70">
               MIRA ingests live log streams, mines templates online, learns an adaptive baseline
               of normal behaviour, and fuses statistical, template and security detectors into
               explainable, correlated incidents — streamed to your team in real time.
@@ -278,7 +278,7 @@ export default function Landing() {
               {STATS.map((s) => (
                 <div key={s.l} className="rounded-2xl border border-black/10 bg-white/70 p-4">
                   <div className="text-3xl font-extrabold text-[#101610]"><Counter value={s.v} /></div>
-                  <div className="mt-1 text-xs text-[#101610]/50">{s.l}</div>
+                  <div className="mt-1 text-xs text-[#101610]/70">{s.l}</div>
                 </div>
               ))}
             </div>
@@ -305,10 +305,10 @@ export default function Landing() {
               className="relative rounded-2xl border border-black/10 bg-white/70 p-5">
               <div className="mb-3 flex items-center justify-between">
                 <span className="grid size-10 place-items-center rounded-xl bg-[#dcfce7] text-[#15803d]"><Icon className="size-5" /></span>
-                <span className="font-mono text-xs text-[#101610]/40">{n}</span>
+                <span className="font-mono text-xs text-[#101610]/70">{n}</span>
               </div>
               <h3 className="font-bold">{t}</h3>
-              <p className="mt-1.5 text-sm text-[#101610]/55">{d}</p>
+              <p className="mt-1.5 text-sm text-[#101610]/70">{d}</p>
             </motion.div>
           ))}
         </div>
@@ -329,7 +329,7 @@ export default function Landing() {
               className="group rounded-2xl border border-black/10 bg-white/70 p-6 transition-all hover:-translate-y-1 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.25)]">
               <div className="mb-4 grid size-11 place-items-center rounded-xl bg-[#dcfce7] text-[#15803d]"><Icon className="size-5" /></div>
               <h3 className="text-lg font-bold">{t}</h3>
-              <p className="mt-2 text-sm text-[#101610]/60">{d}</p>
+              <p className="mt-2 text-sm text-[#101610]/70">{d}</p>
             </motion.div>
           ))}
         </div>
@@ -349,12 +349,12 @@ export default function Landing() {
             <motion.div key={n} initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
               className="group relative overflow-hidden rounded-2xl border border-black/10 bg-white/70 p-6 transition-all hover:-translate-y-1 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.25)]">
               <div className="mb-4 flex items-center justify-between">
-                <span className="font-mono text-xs text-[#101610]/40">{n} —</span>
+                <span className="font-mono text-xs text-[#101610]/70">{n} —</span>
                 <span className="grid size-8 place-items-center rounded-full border border-black/15 transition-colors group-hover:bg-[#22c55e]"><ArrowRight className="size-4" /></span>
               </div>
               <div className="mb-3 grid size-11 place-items-center rounded-xl bg-[#dcfce7] text-[#15803d]"><Icon className="size-5" /></div>
               <h3 className="text-xl font-bold">{title}</h3>
-              <p className="mt-2 text-sm text-[#101610]/60">{body}</p>
+              <p className="mt-2 text-sm text-[#101610]/70">{body}</p>
             </motion.div>
           ))}
         </div>
@@ -364,11 +364,11 @@ export default function Landing() {
       <section id="tech-stack" className="relative z-10 mx-auto max-w-7xl px-6 pb-24">
         <Eyebrow>— 05 / Tech Stack</Eyebrow>
         <h2 className="mb-4 max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">The real engine under the hood<span className="text-[#15803d]">.</span></h2>
-        <p className="mb-12 max-w-xl text-[#101610]/55">Not a mockup — a modular monolith running FastAPI, PostgreSQL and Redis with a live detection pipeline and WebSocket streaming.</p>
+        <p className="mb-12 max-w-xl text-[#101610]/70">Not a mockup — a modular monolith running FastAPI, PostgreSQL and Redis with a live detection pipeline and WebSocket streaming.</p>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {STACK.map(({ group, items }) => (
             <div key={group} className="rounded-2xl border border-black/10 bg-white/70 p-6">
-              <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#101610]/50"><Boxes className="size-4 text-[#15803d]" /> {group}</div>
+              <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#101610]/70"><Boxes className="size-4 text-[#15803d]" /> {group}</div>
               <div className="flex flex-wrap gap-2">
                 {items.map((it) => (
                   <span key={it} className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-sm font-medium"><span className="size-1.5 rounded-full bg-[#15803d]" /> {it}</span>
@@ -379,7 +379,7 @@ export default function Landing() {
         </div>
         <div className="mt-6">
           <Marquee pauseOnHover className="[--duration:30s]">
-            {CHIPS.map((c) => (<div key={c} className="mx-2 flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-4 py-1.5 text-sm text-[#101610]/60"><span className="size-1.5 rounded-full bg-[#15803d]" /> {c}</div>))}
+            {CHIPS.map((c) => (<div key={c} className="mx-2 flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-4 py-1.5 text-sm text-[#101610]/70"><span className="size-1.5 rounded-full bg-[#15803d]" /> {c}</div>))}
           </Marquee>
         </div>
       </section>
@@ -399,7 +399,7 @@ export default function Landing() {
 
       {/* FOOTER */}
       <footer className="relative z-10 border-t border-black/10 bg-white/40">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-10 text-sm text-[#101610]/50 md:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-10 text-sm text-[#101610]/70 md:flex-row">
           <div className="flex items-center gap-2 font-extrabold text-[#101610]"><span className="grid size-7 place-items-center rounded-lg bg-[#101610] text-[#22c55e]"><Radar className="size-3.5" /></span>MIRA<span className="text-[#15803d]">.</span></div>
           <p>Prototype landing — MIRA real-time log intelligence. Demo, not affiliated with any named entity.</p>
         </div>
