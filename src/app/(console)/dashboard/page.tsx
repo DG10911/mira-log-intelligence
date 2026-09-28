@@ -41,7 +41,7 @@ export default function DashboardPage() {
         <div className="ml-auto flex items-center gap-2 text-xs text-white/50">
           <div className="h-1.5 w-40 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full bg-brand-accent transition-all"
+              className="h-full bg-lime transition-all"
               style={{ width: `${Math.round((data?.baseline_confidence ?? 0) * 100)}%` }}
             />
           </div>

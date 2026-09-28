@@ -49,7 +49,7 @@ export default function BaselinePage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="h-1.5 w-20 overflow-hidden rounded-full bg-white/10">
-                        <div className="h-full bg-brand-accent" style={{ width: `${Math.round(b.confidence * 100)}%` }} />
+                        <div className="h-full bg-lime" style={{ width: `${Math.round(b.confidence * 100)}%` }} />
                       </div>
                       <span className="text-xs text-white/50">{Math.round(b.confidence * 100)}%</span>
                     </div>

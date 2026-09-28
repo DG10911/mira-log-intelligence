@@ -28,8 +28,8 @@ export function ErrorRateChart() {
         <AreaChart data={data} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
           <defs>
             <linearGradient id="er" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#17a34a" stopOpacity={0.5} />
-              <stop offset="100%" stopColor="#17a34a" stopOpacity={0} />
+              <stop offset="0%" stopColor="#bff23a" stopOpacity={0.5} />
+              <stop offset="100%" stopColor="#bff23a" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
@@ -39,7 +39,7 @@ export function ErrorRateChart() {
             contentStyle={{ background: "#0b1f16", border: "1px solid #ffffff20", borderRadius: 8, fontSize: 12 }}
             labelStyle={{ color: "#ffffff80" }}
           />
-          <Area type="monotone" dataKey="error_rate" stroke="#4ade80" strokeWidth={2} fill="url(#er)" />
+          <Area type="monotone" dataKey="error_rate" stroke="#bff23a" strokeWidth={2} fill="url(#er)" />
         </AreaChart>
       </ResponsiveContainer>
     </ChartFrame>
@@ -63,7 +63,7 @@ export function EventVolumeChart() {
             contentStyle={{ background: "#0b1f16", border: "1px solid #ffffff20", borderRadius: 8, fontSize: 12 }}
             labelStyle={{ color: "#ffffff80" }}
           />
-          <Line type="monotone" dataKey="events" stroke="#6ee7b7" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="events" stroke="#bff23a" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </ChartFrame>

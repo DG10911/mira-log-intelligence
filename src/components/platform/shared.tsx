@@ -1,9 +1,11 @@
 "use client";
 
+import { motion } from "motion/react";
 import { AlertTriangle, Loader2, Inbox } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useLiveStore } from "@/lib/store/liveStore";
+import { BorderBeam } from "@/components/ui/border-beam";
 import type { Severity } from "@/lib/api/types";
 
 const SEV_STYLES: Record<Severity, string> = {
@@ -44,7 +46,7 @@ export function StateBadge({ state }: { state: string }) {
 export function LiveIndicator() {
   const status = useLiveStore((s) => s.status);
   const map = {
-    connected: { c: "bg-brand-accent", t: "LIVE" },
+    connected: { c: "bg-lime shadow-[0_0_10px] shadow-lime/70", t: "LIVE" },
     connecting: { c: "bg-amber-400 animate-pulse", t: "CONNECTING" },
     disconnected: { c: "bg-red-500", t: "OFFLINE" },
   }[status];
@@ -76,16 +78,29 @@ export function StatCard({
 }) {
   const toneCls = {
     default: "text-white",
-    critical: "text-red-400",
+    critical: "text-red-400 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]",
     warn: "text-amber-300",
-    good: "text-brand-accent",
+    good: "text-lime drop-shadow-[0_0_10px_rgba(191,242,58,0.4)]",
   }[tone];
+  const beam =
+    tone === "critical"
+      ? { from: "#f87171", to: "#fca5a5" }
+      : tone === "warn"
+        ? { from: "#fbbf24", to: "#fde68a" }
+        : { from: "#17a34a", to: "#bff23a" };
   return (
-    <div className="relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] p-5">
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      whileHover={{ y: -3 }}
+      className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-lime/30"
+    >
+      <BorderBeam size={90} duration={7} colorFrom={beam.from} colorTo={beam.to} />
       <div className="text-xs font-medium uppercase tracking-wider text-white/40">{label}</div>
       <div className={cn("mt-2 text-3xl font-bold tabular-nums", toneCls)}>{value}</div>
       {hint && <div className="mt-1 text-xs text-white/40">{hint}</div>}
-    </div>
+    </motion.div>
   );
 }
 
