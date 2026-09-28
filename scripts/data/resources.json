@@ -1,0 +1,41 @@
+{
+  "installable": [
+    { "key": "shadcn",     "label": "shadcn/ui",        "url": "https://ui.shadcn.com",              "mode": "name",  "item": "" },
+    { "key": "magic",      "label": "Magic UI",         "url": "https://magicui.design",             "mode": "url",   "index": "https://magicui.design/r/registry.json",             "item": "https://magicui.design/r/{name}.json" },
+    { "key": "aceternity", "label": "Aceternity UI",    "url": "https://ui.aceternity.com",          "mode": "url",   "index": "",                                                    "item": "https://ui.aceternity.com/registry/{name}.json", "fallback": ["3d-card","background-beams","spotlight","text-generate-effect","typewriter-effect","card-hover-effect","bento-grid","sparkles","meteors","lamp","wavy-background","floating-navbar","infinite-moving-cards"] },
+    { "key": "shadercn",   "label": "shadercn (shaders)", "url": "https://shadercn.run",             "mode": "url",   "index": "https://shadercn.run/r/registry.json",               "item": "https://shadercn.run/r/{name}.json" },
+    { "key": "23rd",       "label": "23rd",             "url": "https://23rd.dev/docs",              "mode": "url",   "index": "https://23rd.dev/r/registry.json",                   "item": "https://23rd.dev/r/{name}.json" },
+    { "key": "uselayouts", "label": "uselayouts",       "url": "https://uselayouts.com",             "mode": "url",   "index": "https://uselayouts.com/r/registry.json",             "item": "https://uselayouts.com/r/{name}.json" },
+    { "key": "gooey",      "label": "gooey shyt",       "url": "https://gooey-shyt.vercel.app",      "mode": "url",   "index": "https://gooey-shyt.vercel.app/r/registry.json",      "item": "https://gooey-shyt.vercel.app/r/{name}.json" }
+  ],
+  "libraries_copy_paste": [
+    { "name": "Uiverse",         "url": "https://uiverse.io",                 "desc": "Thousands of open-source (MIT) CSS/HTML elements" },
+    { "name": "Motion Primitives","url": "https://motion-primitives.com",     "desc": "Advanced React UI interactions, copy per component" },
+    { "name": "UIAble",          "url": "https://uiable.com",                 "desc": "Extends the shadcn ecosystem" },
+    { "name": "mapcn",           "url": "https://mapcn.dev",                  "desc": "Map components for React" },
+    { "name": "MicroKit UI",     "url": "https://microkit.co",               "desc": "Micro-interactions for buttons & inputs" },
+    { "name": "Liquid Glass",    "url": "https://glass.samasante.com",        "desc": "Glass refraction components" },
+    { "name": "Kinetics",        "url": "https://kinetics.colorion.co",       "desc": "150+ motion effects with code" },
+    { "name": "CSS Text Effects","url": "https://text-effects.colorion.co",   "desc": "Copy-paste CSS text effects" },
+    { "name": "annnimate",       "url": "https://annnimate.com",              "desc": "Animation library (copy from site)" }
+  ],
+  "animation_3d": [
+    { "name": "Anime.js",       "url": "https://animejs.com",        "desc": "Lightweight DOM animation (installed: npm animejs)" },
+    { "name": "Theatre.js",     "url": "https://theatrejs.com",      "desc": "Expressive web animation — npm @theatre/core" },
+    { "name": "Spline",         "url": "https://spline.design",      "desc": "3D in the browser, exports to React (@splinetool/react-spline)" },
+    { "name": "Unicorn Studio", "url": "https://unicorn.studio",     "desc": "Interactive web effects — embed SDK" }
+  ],
+  "galleries_inspiration": [
+    { "name": "Component Gallery", "url": "https://component.gallery",  "desc": "2,600+ examples of the same element solved" },
+    { "name": "Navbar Gallery",    "url": "https://navbar.gallery",     "desc": "Hundreds of navigations" },
+    { "name": "3Dicons",           "url": "https://3dicons.co",         "desc": "Open-source (CC0) 3D icons to download" },
+    { "name": "Scrolltide",        "url": "https://scrolltide.co",      "desc": "Animated components + build prompts (paid)" },
+    { "name": "21st.dev",          "url": "https://21st.dev",           "desc": "Component registry, plugs into agents via MCP" },
+    { "name": "wellmade.fyi",      "url": "https://wellmade.fyi",       "desc": "High-quality design resources" },
+    { "name": "ogfolio",           "url": "https://ogfolio.com",        "desc": "Curated library of Open Graph images" },
+    { "name": "icon.museum",       "url": "https://icon.museum",        "desc": "Discover, explore & curate app icons" },
+    { "name": "admiretheweb",      "url": "https://admiretheweb.com",   "desc": "Amazing website inspiration" },
+    { "name": "brandlogo.co",      "url": "https://brandlogo.co",       "desc": "Discover brand identity through logos" },
+    { "name": "umanmade",          "url": "https://umanmade.com",       "desc": "Curated hub for digital creativity" }
+  ]
+}

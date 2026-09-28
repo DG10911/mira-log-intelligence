@@ -1,0 +1,38 @@
+{
+  "note": "These are Claude Code sub-agents. A CLI cannot wire them into your codebase; invoke them inside Claude Code via the Agent tool using the subagent_type shown.",
+  "groups": {
+    "Design & UX": [
+      { "id": "UI Designer",            "desc": "Visual design systems, component libraries, pixel-perfect UI" },
+      { "id": "ui-designer",            "desc": "Component creation, layout systems, design-to-code" },
+      { "id": "ui-ux-designer",         "desc": "Wireframes, design systems, user flows, accessibility" },
+      { "id": "design-system-architect","desc": "Design tokens, theming, multi-brand component libraries" },
+      { "id": "UX Researcher",          "desc": "Usability testing, behaviour analysis, research insights" },
+      { "id": "Brand Guardian",         "desc": "Brand identity, consistency, positioning" },
+      { "id": "Accessibility Auditor",  "desc": "WCAG audits, screen-reader testing, inclusive design" },
+      { "id": "Whimsy Injector",        "desc": "Adds delight, personality and playful micro-moments" },
+      { "id": "UI Finish-Gate Reviewer","desc": "Catches generic, interchangeable UI before ship" }
+    ],
+    "Frontend & Build": [
+      { "id": "Frontend Developer",     "desc": "React/Vue/Angular UI implementation & perf" },
+      { "id": "frontend-developer",     "desc": "React 19 / Next.js 15 components, a11y, perf" },
+      { "id": "Rapid Prototyper",       "desc": "Fast MVP / proof-of-concept builds" },
+      { "id": "typescript-pro",         "desc": "Advanced types, generics, strict TS patterns" },
+      { "id": "javascript-pro",         "desc": "ES6+, async, Node/browser compatibility" },
+      { "id": "Mobile App Builder",     "desc": "Native iOS/Android & cross-platform" },
+      { "id": "3D & Scene Developer",   "desc": "Cesium/ArcGIS/three.js 3D web scenes" },
+      { "id": "XR Immersive Developer", "desc": "Browser AR/VR/XR with WebXR" }
+    ],
+    "Review & Quality": [
+      { "id": "Code Reviewer",          "desc": "Correctness, security, maintainability review" },
+      { "id": "ui-visual-validator",    "desc": "Screenshot analysis & visual regression" },
+      { "id": "Test Automation Engineer","desc": "Playwright/Cypress resilient E2E tests" },
+      { "id": "Evidence Collector",     "desc": "Screenshot-backed QA, finds real issues" }
+    ],
+    "Utility": [
+      { "id": "general-purpose",        "desc": "Multi-step research & code tasks" },
+      { "id": "Explore",                "desc": "Fast read-only fan-out code search" },
+      { "id": "Plan",                   "desc": "Design implementation plans" },
+      { "id": "MCP Builder",            "desc": "Build MCP servers to extend agents" }
+    ]
+  }
+}

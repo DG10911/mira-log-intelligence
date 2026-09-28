@@ -1,0 +1,58 @@
+{
+  "note": "These are Claude Code skills. Invoke inside Claude Code via the Skill tool (or /name). A CLI only lists them for reference.",
+  "groups": {
+    "UI & Visual Design": [
+      { "id": "better-ui",            "desc": "General UI quality upgrades" },
+      { "id": "better-typography",    "desc": "Type scale, hierarchy, readability" },
+      { "id": "better-colors",        "desc": "Color palette & system guidance" },
+      { "id": "better-layout",        "desc": "Layout & composition" },
+      { "id": "better-accessibility", "desc": "A11y improvements" },
+      { "id": "visual-hierarchy",     "desc": "Guide the eye through the UI" },
+      { "id": "color-system",         "desc": "Build a coherent color system" },
+      { "id": "spacing-system",       "desc": "Consistent spacing scale" },
+      { "id": "typography-scale",     "desc": "Modular type scale" },
+      { "id": "dark-mode-design",     "desc": "Design robust dark mode" },
+      { "id": "design-token",         "desc": "Define & structure design tokens" }
+    ],
+    "Frontend Engineering": [
+      { "id": "frontend-design",           "desc": "Frontend design implementation" },
+      { "id": "frontend-dev",              "desc": "Frontend development workflow" },
+      { "id": "shadcn-ui",                 "desc": "Work with shadcn/ui effectively" },
+      { "id": "tailwind-design-system",    "desc": "Tailwind-based design system" },
+      { "id": "nextjs-app-router-patterns","desc": "Next.js App Router patterns" },
+      { "id": "react-state-management",    "desc": "React state patterns" },
+      { "id": "responsive-design",         "desc": "Responsive layouts" },
+      { "id": "web-design-engineer",       "desc": "Design-engineering craft" }
+    ],
+    "Animation & 3D": [
+      { "id": "gsap-core",         "desc": "GSAP fundamentals" },
+      { "id": "gsap-scrolltrigger","desc": "Scroll-driven animation" },
+      { "id": "gsap-timeline",     "desc": "Sequenced timelines" },
+      { "id": "emilkowalski-motion","desc": "Tasteful motion patterns" },
+      { "id": "animation-principles","desc": "Easing, staging, follow-through" },
+      { "id": "motion-system",     "desc": "Product-wide motion tokens" },
+      { "id": "threejs",           "desc": "three.js scenes" },
+      { "id": "webgl-experience",  "desc": "WebGL interactive experiences" },
+      { "id": "shader-dev",        "desc": "Shader development" }
+    ],
+    "Critique & Review": [
+      { "id": "design-review",             "desc": "Structured design review" },
+      { "id": "design-critique",           "desc": "Critique a design" },
+      { "id": "critique-typography",       "desc": "Typography-specific critique" },
+      { "id": "critique-color",            "desc": "Color critique" },
+      { "id": "critique-visual-hierarchy", "desc": "Hierarchy critique" },
+      { "id": "design-qa-checklist",       "desc": "Pre-ship design QA" },
+      { "id": "impeccable-design-polish",  "desc": "Final polish pass" }
+    ],
+    "Build Pages & Assets": [
+      { "id": "saas-landing",     "desc": "SaaS landing page" },
+      { "id": "pricing-page",     "desc": "Pricing page" },
+      { "id": "waitlist-page",    "desc": "Waitlist page" },
+      { "id": "dashboard",        "desc": "Dashboard UI" },
+      { "id": "mobile-app",       "desc": "Mobile app UI" },
+      { "id": "web-prototype",    "desc": "Web prototype" },
+      { "id": "icon-system",      "desc": "Icon system" },
+      { "id": "imagegen",         "desc": "Generate images" }
+    ]
+  }
+}
