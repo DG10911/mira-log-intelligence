@@ -163,7 +163,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-[#eef5ee] text-[#101610]">
       {/* background grid + orbs */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 [background-image:linear-gradient(#0000000a_1px,transparent_1px),linear-gradient(90deg,#0000000a_1px,transparent_1px)] [background-size:46px_46px] [mask-image:radial-gradient(ellipse_at_60%_10%,black,transparent_78%)]" />
         <div className="absolute right-0 top-0 size-[42rem] rounded-full bg-[#22c55e]/25 blur-[130px]" />
         <div className="absolute -left-40 top-1/3 size-[30rem] rounded-full bg-[#22c55e]/15 blur-[120px]" />
@@ -187,7 +187,7 @@ export default function Landing() {
 
       {/* HERO */}
       <section id="product" className="relative z-10 mx-auto grid max-w-7xl items-center gap-8 px-6 pb-10 pt-6 lg:grid-cols-2">
-        <div>
+        <div className="min-w-0">
           <Eyebrow>Real-Time Log Intelligence</Eyebrow>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className="text-[2rem] font-extrabold leading-[1.05] tracking-tight sm:text-5xl sm:leading-[0.98] md:text-7xl">
             See the{" "}
