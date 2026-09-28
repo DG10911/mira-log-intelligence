@@ -111,6 +111,41 @@ export interface DatasetList {
   datasets: DatasetInfo[];
 }
 
+export interface QualityMetrics {
+  labeled: {
+    dataset: string;
+    windows: number;
+    lines: number;
+    anomalous_pct: number;
+    precision: number;
+    recall: number;
+    f1: number;
+    supervised: boolean;
+  };
+  controlled: {
+    precision_before: number;
+    precision_after: number;
+    recall_after: number;
+    f1_before: number;
+    f1_after: number;
+    false_positives_before: number;
+    false_positives_after: number;
+  };
+  throughput: {
+    events_per_sec_before: number;
+    events_per_sec_after: number;
+    speedup: number;
+    events_per_sec_live: number;
+    events_per_sec_peak: number;
+  };
+  headline: {
+    f1_labeled: number;
+    f1_controlled: number;
+    precision_controlled: number;
+    throughput_peak: number;
+  };
+}
+
 export interface WsEvent {
   type:
     | "log_event"

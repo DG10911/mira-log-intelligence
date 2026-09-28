@@ -188,3 +188,18 @@ async def replay(body: ReplayBody, request: Request) -> dict:
         raise HTTPException(404, detail=f"dataset file not found: {body.path}")
     _pipeline(request).replay_dataset(body.path, rate_hz=body.rate_hz, max_lines=body.max_lines)
     return {"replaying": body.path, "rate_hz": body.rate_hz, "max_lines": body.max_lines}
+
+
+# ---------- quality metrics + demo mode ----------
+@router.get("/metrics/quality")
+def metrics_quality(request: Request) -> dict:
+    from app.metrics.benchmarks import quality_summary
+
+    p = _pipeline(request)
+    return quality_summary(p.throughput_eps, p.peak_throughput_eps)
+
+
+@router.post("/demo/start")
+async def demo_start(request: Request) -> dict:
+    _pipeline(request).run_demo()
+    return {"demo": "started", "duration_s": 24}

@@ -9,6 +9,7 @@ import type {
   DatasetList,
   Incident,
   LogRow,
+  QualityMetrics,
   Stats,
   SystemHealth,
   TemplateRow,
@@ -128,6 +129,24 @@ export function useReplay() {
   return useMutation({
     mutationFn: (v: { path: string; rate_hz?: number; max_lines?: number }) =>
       apiPost<{ replaying: string; rate_hz: number; max_lines: number }>("/api/replay", v),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["stats"] });
+    },
+  });
+}
+
+export function useQualityMetrics() {
+  return useQuery({
+    queryKey: ["quality"],
+    queryFn: () => apiGet<QualityMetrics>("/api/metrics/quality"),
+    refetchInterval: 2000,
+  });
+}
+
+export function useStartDemo() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => apiPost<{ demo: string; duration_s: number }>("/api/demo/start", {}),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["stats"] });
     },

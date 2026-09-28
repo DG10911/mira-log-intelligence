@@ -1,16 +1,37 @@
 "use client";
 
-import { useStats } from "@/lib/api/hooks";
+import { PlayCircle } from "lucide-react";
+import { toast } from "sonner";
+
+import { useStartDemo, useStats } from "@/lib/api/hooks";
 import { AlertFeed } from "@/components/platform/alert-feed";
 import { ErrorRateChart, EventVolumeChart } from "@/components/platform/charts";
+import { QualityPanel } from "@/components/platform/quality-panel";
 import { PageHeader, StatCard, StateBadge } from "@/components/platform/shared";
 
 export default function DashboardPage() {
   const { data, isLoading, isError } = useStats();
+  const demo = useStartDemo();
 
   return (
     <div>
-      <PageHeader title="Command Center" subtitle="Real-time log intelligence & security observability" />
+      <div className="flex items-start justify-between gap-4">
+        <PageHeader title="Command Center" subtitle="Real-time log intelligence & security observability" />
+        <button
+          onClick={() =>
+            demo.mutate(undefined, {
+              onSuccess: () => toast.success("Demo Mode: normal → attack → incident → recovery (~24s)"),
+              onError: () => toast.error("Could not start demo — is the backend running?"),
+            })
+          }
+          disabled={demo.isPending}
+          className="flex shrink-0 items-center gap-2 rounded-lg border border-lime/30 bg-lime/10 px-4 py-2 text-sm font-semibold text-lime transition-colors hover:bg-lime/20 disabled:opacity-50"
+        >
+          <PlayCircle className="size-4" /> Run Demo
+        </button>
+      </div>
+
+      <QualityPanel />
 
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
         <StatCard label="Events" value={isLoading ? "—" : (data?.events ?? 0).toLocaleString()} hint="ingested" />

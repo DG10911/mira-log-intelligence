@@ -54,6 +54,9 @@ class Pipeline:
         # live counters (source of truth for /api/stats "events")
         self.total_events = 0
         self.total_errors = 0
+        self._last_event_count = 0
+        self.throughput_eps = 0.0  # live events/sec (updated each tick)
+        self.peak_throughput_eps = 0.0
         self.latest: FeatureSnapshot = FeatureSnapshot(window_s=30)
         self.detect_window_s = 30
         self._active_ticks = 0  # consecutive ticks with an ACTIVE baseline (warm-up gate)
@@ -75,6 +78,28 @@ class Pipeline:
     async def feed_many(self, lines: list[str]) -> None:
         for line in lines:
             await self._raw_queue.put(line)
+
+    def run_demo(self) -> asyncio.Task:
+        """Scripted judge demo: normal baseline -> attack -> incident -> recovery."""
+        from app.simulator.scenarios import generate
+
+        async def _script() -> None:
+            steps = [
+                ("normal traffic — baseline learning", "NORMAL", 90, 8),
+                ("normal traffic — baseline stable", "NORMAL", 60, 4),
+                ("BRUTE_FORCE attack injected", "BRUTE_FORCE", 220, 3),
+                ("5xx storm compounds the incident", "5XX_STORM", 160, 3),
+                ("recovery — traffic returns to normal", "NORMAL", 90, 6),
+            ]
+            for label, scenario, count, seconds in steps:
+                await self.bus.publish("demo_step", {"label": label, "scenario": scenario})
+                await self.feed_many(generate(scenario, count))
+                await asyncio.sleep(seconds)
+            await self.bus.publish("demo_step", {"label": "demo complete", "scenario": "DONE"})
+
+        task = asyncio.create_task(_script())
+        self._tasks.append(task)
+        return task
 
     def replay_dataset(self, path: str, rate_hz: float | None = None, max_lines: int | None = None) -> asyncio.Task:
         """Stream a real LogHub dataset file (from KIOXIA) into the pipeline as a task."""
@@ -157,6 +182,11 @@ class Pipeline:
 
     async def _tick(self) -> None:
         self._flush_writes()  # batched persistence once per tick
+        # live throughput = events since last tick / tick interval
+        delta = self.total_events - self._last_event_count
+        self._last_event_count = self.total_events
+        self.throughput_eps = delta / max(self.settings.tick_interval_s, 1e-9)
+        self.peak_throughput_eps = max(self.peak_throughput_eps, self.throughput_eps)
         snap = compute(self.windows.window(self.detect_window_s))
         self.latest = snap
 
