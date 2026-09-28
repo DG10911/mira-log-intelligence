@@ -285,7 +285,7 @@ export default function Landing() {
           </div>
           <div className="relative grid min-h-[340px] place-items-center">
             <Orb size={240} className="opacity-80" />
-            <div className="relative"><MascotImage pose="laptop" size={320} glow={false} /></div>
+            <div className="relative"><MascotImage pose="thumbsup" size={320} glow={false} /></div>
           </div>
         </div>
       </section>

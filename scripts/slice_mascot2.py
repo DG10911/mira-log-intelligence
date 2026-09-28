@@ -1,5 +1,5 @@
-"""High-quality mascot slicing: rembg (u2net) matte on the full sheet, then
-crop with tuned, gap-separated boxes (no neighbor bleed), autocrop to content.
+"""High-quality mascot slicing: crop each pose from the sheet, then run rembg
+(u2net) on each SINGLE-subject tile (what it's good at), autocrop to content.
 """
 from pathlib import Path
 
@@ -11,8 +11,7 @@ SRC = ROOT / ".context/attachments/Dsquei/image.png"
 OUT = ROOT / "public/mascot"
 OUT.mkdir(parents=True, exist_ok=True)
 
-# Tuned boxes with gaps between neighbors so no adjacent mascot bleeds in.
-# (name, x0, y0, x1, y1)
+# Tuned boxes with gaps so no adjacent mascot bleeds in. (name, x0,y0,x1,y1)
 TILES = [
     ("hero", 30, 10, 370, 512),
     ("wave", 395, 10, 745, 512),
@@ -25,28 +24,25 @@ TILES = [
 ]
 
 
-def autocrop(img: Image.Image, pad: int = 6) -> Image.Image:
+def autocrop(img: Image.Image, pad: int = 8) -> Image.Image:
     bbox = img.getbbox()
     if not bbox:
         return img
     x0, y0, x1, y1 = bbox
-    x0 = max(0, x0 - pad); y0 = max(0, y0 - pad)
-    x1 = min(img.width, x1 + pad); y1 = min(img.height, y1 + pad)
-    return img.crop((x0, y0, x1, y1))
+    return img.crop((max(0, x0 - pad), max(0, y0 - pad), min(img.width, x1 + pad), min(img.height, y1 + pad)))
 
 
 def main() -> None:
-    print("Loading sheet + running rembg (u2net) on full sheet …")
+    print("rembg per-tile (u2net, single subject each) …")
     sheet = Image.open(SRC).convert("RGBA")
     session = new_session("u2net")
-    cut = remove(sheet, session=session, post_process_mask=True)  # transparent bg
-    cut.save(OUT / "_sheet_cut.png")
-    print("  matte done")
     for name, x0, y0, x1, y1 in TILES:
-        tile = cut.crop((x0, y0, x1, y1))
-        cleaned = autocrop(tile)
+        tile = sheet.crop((x0, y0, x1, y1))
+        cut = remove(tile, session=session, post_process_mask=True)
+        cleaned = autocrop(cut)
         cleaned.save(OUT / f"{name}.png")
         print(f"  {name}.png  {cleaned.size}")
+    (OUT / "_sheet_cut.png").unlink(missing_ok=True)
     print("done ->", OUT)
 
 
