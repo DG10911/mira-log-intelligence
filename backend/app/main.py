@@ -60,8 +60,10 @@ def create_app() -> FastAPI:
     app = FastAPI(title=settings.app_name, version="0.1.0", lifespan=lifespan)
     app.add_middleware(
         CORSMiddleware,
-        allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
-        allow_credentials=True,
+        # Public demo: allow localhost, *.vercel.app, and *.ngrok-free.app origins.
+        # No cookies are used, so credentials stay off and a broad allowlist is safe.
+        allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+|https://.*\.(vercel\.app|ngrok-free\.app|ngrok\.io)",
+        allow_credentials=False,
         allow_methods=["*"],
         allow_headers=["*"],
     )

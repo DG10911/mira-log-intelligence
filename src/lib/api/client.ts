@@ -11,7 +11,10 @@ export class ApiError extends Error {
 }
 
 export async function apiGet<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, { cache: "no-store" });
+  const res = await fetch(`${API_BASE}${path}`, {
+    cache: "no-store",
+    headers: { "ngrok-skip-browser-warning": "true" },
+  });
   if (!res.ok) {
     const detail = await res.json().catch(() => ({}));
     throw new ApiError(res.status, detail.detail ?? res.statusText);
@@ -22,7 +25,7 @@ export async function apiGet<T>(path: string): Promise<T> {
 export async function apiPost<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", "ngrok-skip-browser-warning": "true" },
     body: JSON.stringify(body),
   });
   if (!res.ok) {
@@ -35,7 +38,7 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
 export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     method: "PATCH",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", "ngrok-skip-browser-warning": "true" },
     body: JSON.stringify(body),
   });
   if (!res.ok) {
