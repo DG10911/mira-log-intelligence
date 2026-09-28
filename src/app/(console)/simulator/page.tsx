@@ -12,12 +12,13 @@ import {
   ShieldOff,
   TrafficCone,
   Zap,
+  type LucideIcon,
 } from "lucide-react";
 
 import { useScenarios, useSimulate } from "@/lib/api/hooks";
 import { PageHeader } from "@/components/platform/shared";
 
-const META: Record<string, { icon: React.ElementType; desc: string; danger?: boolean }> = {
+const META: Record<string, { icon: LucideIcon; desc: string; danger?: boolean }> = {
   NORMAL: { icon: Radio, desc: "Baseline healthy traffic" },
   BRUTE_FORCE: { icon: KeyRound, desc: "Repeated failed logins from one IP", danger: true },
   CREDENTIAL_STUFFING: { icon: Repeat, desc: "Many users, few source IPs", danger: true },

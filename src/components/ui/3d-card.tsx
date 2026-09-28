@@ -134,14 +134,17 @@ export const CardItem = ({
     }
   };
 
-  return (
-    <Tag
-      ref={ref}
-      className={cn("w-fit transition duration-200 ease-linear", className)}
-      {...rest}
-    >
-      {children}
-    </Tag>
+  // createElement (instead of <Tag/>) keeps the polymorphic `as` prop working
+  // without the JSX intrinsic-union collapse introduced by @react-three/fiber's
+  // ThreeElements JSX augmentation for the general string-tag case.
+  return React.createElement(
+    Tag,
+    {
+      ref,
+      className: cn("w-fit transition duration-200 ease-linear", className),
+      ...rest,
+    },
+    children,
   );
 };
 

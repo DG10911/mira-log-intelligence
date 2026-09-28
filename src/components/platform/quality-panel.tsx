@@ -1,6 +1,6 @@
 "use client";
 
-import { Award, Gauge, Target, Zap } from "lucide-react";
+import { Award, Gauge, Target, Zap, type LucideIcon } from "lucide-react";
 
 import { useQualityMetrics } from "@/lib/api/hooks";
 
@@ -10,7 +10,7 @@ function Metric({
   value,
   sub,
 }: {
-  icon: React.ElementType;
+  icon: LucideIcon;
   label: string;
   value: string;
   sub: string;

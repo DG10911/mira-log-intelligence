@@ -54,7 +54,13 @@ export function MiraModel({ reducedMotion = false }: { reducedMotion?: boolean }
       const mat = mesh.material as THREE.MeshStandardMaterial | undefined;
       if (mat && mat.name === "MIRA_eye") eyeMat = mat;
     });
-    return { head, eyeL, eyeR, eyeMat, headRest: head?.rotation.clone() };
+    return {
+      head,
+      eyeL,
+      eyeR,
+      eyeMat: eyeMat as THREE.MeshStandardMaterial | null,
+      headRest: head?.rotation.clone(),
+    };
   }, [model]);
 
   // Base idle loop.
