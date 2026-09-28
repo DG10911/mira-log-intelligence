@@ -181,6 +181,15 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
