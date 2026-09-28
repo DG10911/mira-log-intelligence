@@ -30,6 +30,14 @@ class LogRepo:
         self.s.refresh(row)
         return row
 
+    def add_many(self, rows: list[LogRow]) -> int:
+        """Bulk insert in ONE transaction — the throughput path."""
+        if not rows:
+            return 0
+        self.s.add_all(rows)
+        self.s.commit()
+        return len(rows)
+
     def recent(self, limit: int = 100, service: str | None = None, level: str | None = None) -> list[LogRow]:
         q = select(LogRow)
         if service:

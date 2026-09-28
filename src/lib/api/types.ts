@@ -96,6 +96,21 @@ export interface SystemHealth {
   events_processed: number;
 }
 
+export interface DatasetInfo {
+  key: string;
+  path: string;
+  size_mb: number;
+  lines_estimate: number;
+  has_labels: boolean;
+}
+
+export interface DatasetList {
+  data_root: string;
+  dataset_dir: string;
+  count: number;
+  datasets: DatasetInfo[];
+}
+
 export interface WsEvent {
   type:
     | "log_event"

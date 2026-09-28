@@ -58,7 +58,9 @@ def fuse(
         weighted.append(d.score * w.get(d.detector, 1.0))
         contributing.append(d.detector)
         evidence[d.feature] = d.evidence
-        peak_sigma = max(peak_sigma, abs(d.deviation_sigma))
+        # Cap at 50σ: a near-flat baseline yields astronomically large raw z that
+        # reads as a bug. Still well above CRITICAL (8σ), so severity is unaffected.
+        peak_sigma = max(peak_sigma, min(abs(d.deviation_sigma), 50.0))
 
     for s in signals:
         weighted.append(s.confidence * w.get("security", 1.0))

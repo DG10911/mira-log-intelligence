@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIRA · Pitch Deck</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* MIRA — Acentra Health green identity override on the pitch-deck template */
+  .tpl-pitch-deck{
+    --accent:#16a34a;--accent-2:#22c55e;--accent-3:#4ade80;
+    --grad:linear-gradient(135deg,#0b3b2e 0%,#16a34a 50%,#22c55e 100%);
+    --grad-soft:linear-gradient(135deg,#e7f5ec,#eef7f0 55%,#f2fbf5);
+  }
+  .tpl-pitch-deck .ask-box{box-shadow:0 30px 70px rgba(16,163,74,.35)}
+  .tpl-pitch-deck .pipe{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:26px}
+  .tpl-pitch-deck .pipe .step{padding:10px 16px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);font-weight:700;font-size:15px;color:var(--text-1)}
+  .tpl-pitch-deck .pipe .arw{color:var(--accent);font-weight:900}
+  .tpl-pitch-deck .pipe .hot{background:var(--grad);color:#fff;border:none}
+  .tpl-pitch-deck .mono{font-family:'JetBrains Mono','SF Mono',ui-monospace,monospace}
+  .tpl-pitch-deck .chip{display:inline-block;padding:6px 12px;border-radius:999px;border:1px solid var(--border-strong);font-size:14px;font-weight:600;color:var(--text-2)}
+  .tpl-pitch-deck .sev{display:inline-flex;gap:8px;align-items:center;font-weight:800}
+  .tpl-pitch-deck .dot-red{width:12px;height:12px;border-radius:50%;background:#ef4444;box-shadow:0 0 14px #ef4444}
+  .tpl-pitch-deck .demo-card{border-left:4px solid #ef4444}
+</style>
+</head>
+<body class="tpl-pitch-deck" data-themes="pitch-deck-vc,terminal-green,corporate-clean,swiss-grid">
+<div class="deck">
+
+  <!-- 1. Cover -->
+  <section class="slide" data-title="Cover">
+    <div class="cover-bg"></div>
+    <div class="cover-blob"></div>
+    <div style="position:absolute;top:56px;left:112px"><span class="brand-dot"></span><span class="brand">MIRA</span></div>
+    <p class="kicker">Real-time log anomaly detection · Hackathon 2026</p>
+    <h1 class="h1 anim-fade-up" data-anim="fade-up">See the <span class="gradient-text">signal</span><br>before it becomes<br>an incident.</h1>
+    <p class="lede mt-m">MIRA watches every log your hospital systems produce, learns "normal" on its own, and raises graded, explainable alerts the moment behavior drifts — live.</p>
+    <div class="deck-footer"><span>Medical Infrastructure Reliability &amp; Anomaly platform · Acentra Health theme</span><span class="slide-number" data-current="1" data-total="12"></span></div>
+    <div class="notes">Open calm. One sentence: MIRA is a real-time, self-learning anomaly detector for hospital infrastructure logs. The whole pitch proves one claim — it learns normal by itself and explains every alert. Say "not affiliated with Acentra — this is a themed prototype."</div>
+  </section>
+
+  <!-- 2. Problem -->
+  <section class="slide" data-title="Problem">
+    <span class="section-num">01</span>
+    <p class="num-tag">PROBLEM</p>
+    <h2 class="h2 mt-s">Hospital systems fail <span class="gradient-text">silently</span>.</h2>
+    <div class="grid g3 mt-l">
+      <div class="card"><h4>Hardcoded thresholds</h4><p class="dim">Most tools fire on <span class="mono">if error_rate &gt; 0.2</span>. Wrong at 3am, wrong on a holiday, wrong when traffic shifts.</p></div>
+      <div class="card"><h4>Alert storms, no meaning</h4><p class="dim">Thousands of duplicate alerts, none explaining <em>why</em>. Teams stop looking.</p></div>
+      <div class="card"><h4>Detected too late</h4><p class="dim">PACS, EHR, lab &amp; pharmacy degradations surface as outages — after patients are affected.</p></div>
+    </div>
+    <div class="notes">The enemy is the hardcoded threshold. It's brittle and noisy. Land the human stakes: in a hospital, "detected late" means clinical impact.</div>
+  </section>
+
+  <!-- 3. Solution -->
+  <section class="slide" data-title="Solution">
+    <span class="section-num">02</span>
+    <p class="num-tag">SOLUTION</p>
+    <h2 class="h2 mt-s">A baseline that <span class="gradient-text">learns itself</span>.</h2>
+    <p class="lede mt-m">MIRA models "normal" online with an adaptive baseline — <strong>EWMA + median/MAD robust z-score</strong>, per feature, warm-up gated. No thresholds to set. Every alert ships with a human-readable reason and evidence.</p>
+    <div class="row mt-l">
+      <span class="pill pill-accent">Adaptive baseline</span>
+      <span class="pill pill-accent">Graded severity</span>
+      <span class="pill pill-accent">Explainable</span>
+      <span class="pill pill-accent">Honest signals</span>
+      <span class="pill pill-accent">Real-time</span>
+    </div>
+    <div class="notes">The core idea in one breath: it learns normal by itself and resists spike-poisoning by updating the baseline AFTER detection, skipping anomalous features. "Honest" = we say 'possible brute-force', never 'confirmed attack'.</div>
+  </section>
+
+  <!-- 4. Pipeline -->
+  <section class="slide" data-title="Pipeline">
+    <span class="section-num">03</span>
+    <p class="num-tag">HOW IT WORKS</p>
+    <h2 class="h2 mt-s">One streaming pipeline, every second.</h2>
+    <div class="pipe">
+      <span class="step">Ingest</span><span class="arw">→</span>
+      <span class="step">Normalize</span><span class="arw">→</span>
+      <span class="step">Drain3 templates</span><span class="arw">→</span>
+      <span class="step">6 windows</span><span class="arw">→</span>
+      <span class="step hot">Adaptive baseline</span><span class="arw">→</span>
+      <span class="step">Detect + secure</span><span class="arw">→</span>
+      <span class="step">Fusion</span><span class="arw">→</span>
+      <span class="step">Incidents</span>
+    </div>
+    <div class="grid g3 mt-l">
+      <div class="card"><h4>Time-based windows</h4><p class="dim mono">5 · 30 · 60 · 300 · 900 · 3600s</p><p class="dim">Not count-based — honest under bursty traffic.</p></div>
+      <div class="card"><h4>~17 features / tick</h4><p class="dim">error/warn rate, 2xx–5xx mix, p50/p95/p99, unique IPs/users, failed logins, template entropy…</p></div>
+      <div class="card"><h4>Sinks</h4><p class="dim">PostgreSQL · Redis → WebSocket · AWS CloudWatch + SNS.</p></div>
+    </div>
+    <div class="notes">Walk the arrows left to right. Emphasize the highlighted "Adaptive baseline" — that's the differentiator. Windows are time-based, which matters when request volume swings.</div>
+  </section>
+
+  <!-- 5. Detectors -->
+  <section class="slide" data-title="Detectors">
+    <span class="section-num">04</span>
+    <p class="num-tag">DETECTION ENGINE</p>
+    <h2 class="h2 mt-s">Four detectors, one graded verdict.</h2>
+    <div class="grid g2 mt-l">
+      <div class="card card-hover"><h4>robust_zscore</h4><p class="dim">median/MAD deviation per feature, gated by a <strong>minimum effect-size floor</strong> so a trivial 0.048→0.052 never fakes "10σ".</p></div>
+      <div class="card card-hover"><h4>novel_template</h4><p class="dim">A never-before-seen Drain3 log signature is an instant anomaly. Very demo-able.</p></div>
+      <div class="card card-hover"><h4>CUSUM</h4><p class="dim">Page's change-point detector — catches slow, sustained drift the window misses.</p></div>
+      <div class="card card-hover"><h4>security rules</h4><p class="dim">Brute-force, credential-stuffing, SQL/command-injection <em>signals</em> — honest "possible", never "confirmed".</p></div>
+    </div>
+    <p class="dim mt-l"><span class="chip">Fusion → LOW 2σ · MEDIUM 3σ · HIGH 5σ · CRITICAL 8σ</span></p>
+    <div class="notes">Four independent detectors fused into a single graded severity. The effect-size floor is the credibility trick judges love — it kills the "everything is 400σ" problem on a fresh idle baseline.</div>
+  </section>
+
+  <!-- 6. Explainable alert -->
+  <section class="slide" data-title="Explainable">
+    <span class="section-num">05</span>
+    <p class="num-tag">EXPLAINABILITY</p>
+    <h2 class="h2 mt-s">Every alert answers "<span class="gradient-text">why</span>".</h2>
+    <div class="card demo-card mt-l" style="max-width:70ch">
+      <p class="sev"><span class="dot-red"></span> CRITICAL · Authentication Anomaly</p>
+      <p class="mt-s"><strong>Reason:</strong> <span class="mono">failed_logins 3→41 · 4.1σ above baseline (30s window)</span></p>
+      <p class="mt-s"><strong>Assessment:</strong> Possible brute-force activity from a concentrated IP set.</p>
+      <p class="dim mt-s">Fused from 3 detectors · confidence 0.92 · deduped into 1 incident (occurrences: 3)</p>
+    </div>
+    <div class="notes">Read the card aloud — this is what an on-call engineer actually sees. Numbers, a plain-English assessment, evidence, and the fusion + dedup story. Contrast with "ERROR: threshold exceeded".</div>
+  </section>
+
+  <!-- 7. Incidents -->
+  <section class="slide" data-title="Incidents">
+    <span class="section-num">06</span>
+    <p class="num-tag">INCIDENT LIFECYCLE</p>
+    <h2 class="h2 mt-s">Alerts become incidents, not noise.</h2>
+    <div class="pipe">
+      <span class="step hot">OPEN</span><span class="arw">→</span>
+      <span class="step">ACKNOWLEDGED</span><span class="arw">→</span>
+      <span class="step">INVESTIGATING</span><span class="arw">→</span>
+      <span class="step">RESOLVED</span>
+    </div>
+    <div class="grid g3 mt-l">
+      <div class="card"><h4>Fingerprint dedup</h4><p class="dim mono">sha1(service|type|severity)</p><p class="dim">Duplicates within a 120s cooldown increment occurrences — no storm.</p></div>
+      <div class="card"><h4>Auto-escalate</h4><p class="dim">Severity rises to the max seen across correlated alerts.</p></div>
+      <div class="card"><h4>Audit trail</h4><p class="dim">Every state transition logged to <span class="mono">incident_events</span>.</p></div>
+    </div>
+    <div class="notes">This is the "not noise" slide. One incident, occurrences counting up, full lifecycle with an audit trail. It's how you make thousands of raw alerts operable.</div>
+  </section>
+
+  <!-- 8. Data / datasets -->
+  <section class="slide" data-title="Data">
+    <span class="section-num">07</span>
+    <p class="num-tag">DATA</p>
+    <h2 class="h2 mt-s">No training set needed — plus real proof.</h2>
+    <div class="grid g2 mt-l">
+      <div class="card"><h4>Learns online</h4><p class="dim">The baseline learns "normal" live from your own traffic. Zero labeled training data required.</p></div>
+      <div class="card"><h4>9-scenario simulator</h4><p class="dim mono">NORMAL · BRUTE_FORCE · CREDENTIAL_STUFFING · API_ABUSE · TRAFFIC_SPIKE · 5XX_STORM · LATENCY · NOVEL_TEMPLATE · COMBINED</p></div>
+      <div class="card"><h4>Real LogHub replay</h4><p class="dim">~6 GB of production logs (HDFS, BGL, OpenStack, Hadoop, Zookeeper…) on a KIOXIA SSD, streamed through the <em>same</em> pipeline.</p></div>
+      <div class="card"><h4>Labeled eval</h4><p class="dim">Ground-truth benchmarks (HDFS/BGL/OpenStack) drive a precision/recall/F1 harness.</p></div>
+    </div>
+    <div class="notes">Two-part story: (1) it needs no external dataset because it's online-learning, (2) but we ALSO replay real production logs off an external SSD and score against labeled ground truth. That's the credibility one-two punch.</div>
+  </section>
+
+  <!-- 9. Tech stack -->
+  <section class="slide" data-title="Tech Stack">
+    <span class="section-num">08</span>
+    <p class="num-tag">TECH STACK</p>
+    <h2 class="h2 mt-s">A real, production-grade engine.</h2>
+    <div class="grid g3 mt-l">
+      <div class="card"><h4>Backend</h4><p class="dim">Python 3.14 · FastAPI · asyncio · SQLModel · numpy · Drain3 · boto3</p></div>
+      <div class="card"><h4>Data &amp; realtime</h4><p class="dim">PostgreSQL (7 tables) · Redis event bus · WebSocket <span class="mono">/ws/events</span></p></div>
+      <div class="card"><h4>Frontend</h4><p class="dim">Next.js · React 19 · Tailwind v4 · TanStack Query + WS hook · zustand</p></div>
+      <div class="card"><h4>Cloud</h4><p class="dim">AWS CloudWatch + SNS via boto3 · LocalStack offline · graceful degrade</p></div>
+      <div class="card"><h4>Storage</h4><p class="dim">KIOXIA external SSD for datasets &amp; artifacts, with auto-fallback</p></div>
+      <div class="card"><h4>Detection</h4><p class="dim">EWMA · median/MAD · CUSUM · Drain3 templating · fusion</p></div>
+    </div>
+    <div class="notes">Say it plainly: this is not a mockup. Every box here is running. Two processes: FastAPI backend on :8000, Next.js frontend on :3005.</div>
+  </section>
+
+  <!-- 10. The Console -->
+  <section class="slide" data-title="Console">
+    <span class="section-num">09</span>
+    <p class="num-tag">THE CONSOLE</p>
+    <h2 class="h2 mt-s">Live, on-brand, every number real.</h2>
+    <div class="grid g3 mt-l">
+      <div class="metric"><div class="n">8</div><div class="l">connected pages — dashboard, anomalies, incidents, logs, templates, baseline, system, simulator</div></div>
+      <div class="metric"><div class="n">&lt;1s</div><div class="l">detection tick — WebSocket-streamed to the UI</div></div>
+      <div class="metric"><div class="n">100%</div><div class="l">real data — REST + WS, no fake numbers outside demo mode</div></div>
+    </div>
+    <p class="lede mt-l">Acentra green identity, mouse-tracking MIRA mascots, orbs, motion, border-beams — a console that looks as good as it works.</p>
+    <div class="notes">This is where you switch to the live demo if hardware allows. The UI is the emotional payoff: a polished, animated security console with a mascot that tracks the cursor. Every stat is wired to the backend.</div>
+  </section>
+
+  <!-- 11. Demo -->
+  <section class="slide" data-title="Demo">
+    <span class="section-num">10</span>
+    <p class="num-tag">LIVE DEMO</p>
+    <h2 class="h2 mt-s">Watch it catch an attack.</h2>
+    <div class="grid g2 mt-l">
+      <div class="card"><h4>1 · Calm</h4><p class="dim">Green feed. Baseline ACTIVE, confidence 100%.</p></div>
+      <div class="card"><h4>2 · Fire</h4><p class="dim">Simulator → BRUTE_FORCE burst.</p></div>
+      <div class="card"><h4>3 · Detect</h4><p class="dim">CRITICAL "Authentication Anomaly", 4.1σ, deduped into one incident.</p></div>
+      <div class="card"><h4>4 · Prove</h4><p class="dim">Replay real LogHub logs off KIOXIA through the same engine.</p></div>
+    </div>
+    <div class="notes">The 4-beat live demo. Rehearse the trigger so the CRITICAL alert fires on cue. Have the browser already at /simulator. Fallback: screen-recording if the venue network is flaky.</div>
+  </section>
+
+  <!-- 12. Thanks -->
+  <section class="slide center tc" data-title="Thanks">
+    <div class="cover-bg"></div>
+    <div>
+      <div class="mega">MIRA.</div>
+      <p class="mega-sub">See the signal before it becomes an incident.</p>
+      <div class="row mt-l" style="justify-content:center;gap:24px">
+        <span class="pill pill-accent">Adaptive · Explainable · Real-time</span>
+        <span class="pill">Hackathon build · 2026</span>
+      </div>
+    </div>
+    <div class="notes">Close on the tagline. Restate the one claim: it learns normal by itself and explains every alert. Invite questions and offer the live console.</div>
+  </section>
+
+</div>
+<script src="assets/runtime.js"></script>
+</body></html>

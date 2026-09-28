@@ -50,13 +50,19 @@ def build(anomaly: FusedAnomaly, service: str, settings: Settings) -> Alert:
 
     parts: list[str] = []
     if anomaly.peak_sigma:
-        parts.append(f"{anomaly.peak_sigma}σ robust deviation from baseline")
+        # Cap the DISPLAYED sigma: with a near-flat baseline the raw z can be
+        # astronomically large ("467σ") which reads as a bug, not a signal.
+        shown = "50σ+" if anomaly.peak_sigma >= 50 else f"{anomaly.peak_sigma:.1f}σ"
+        parts.append(f"{shown} robust deviation from baseline")
     for feat, ev in anomaly.evidence.items():
         if isinstance(ev, dict) and "current" in ev and "baseline_median" in ev:
             base = ev["baseline_median"]
             cur = ev["current"]
-            pct = ((cur - base) / base * 100) if base else 0.0
-            parts.append(f"{feat}: {base} → {cur} ({pct:+.0f}%)")
+            if base:
+                pct = (cur - base) / base * 100
+                parts.append(f"{feat}: {base} → {cur} ({pct:+.0f}%)")
+            elif cur:
+                parts.append(f"{feat}: {base} → {cur} (new activity)")
     reason = "; ".join(parts) or "Deviation detected across contributing detectors"
 
     assessment = "Statistical deviation"

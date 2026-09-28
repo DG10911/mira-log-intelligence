@@ -20,6 +20,25 @@ MONITORED = (
     "novel_template_count",
 )
 
+# Minimum ABSOLUTE deviation from baseline before a feature may fire, regardless
+# of sigma. Precision guard: with a tiny MAD, a trivial 0.048->0.052 change reads
+# as "10 sigma" — operationally meaningless. Effect size must clear this floor.
+# ENGINEERING DECISION: floors are per-feature HEURISTICS in the feature's units.
+MIN_EFFECT = {
+    "error_rate": 0.05,            # +5 percentage points
+    "warn_rate": 0.08,
+    "rate_4xx": 0.08,
+    "rate_5xx": 0.03,
+    "top_ip_share": 0.20,
+    "endpoint_concentration": 0.20,
+    "failed_logins": 5.0,
+    "latency_p95": 50.0,          # +50 ms
+    "novel_template_count": 1.0,
+    "event_rate": 0.0,            # relative gate applied below
+}
+# Features gated by RELATIVE change (value must differ by >= this fraction).
+MIN_RELATIVE = {"event_rate": 0.5}  # +/-50% throughput shift
+
 
 @dataclass
 class DetectorResult:
@@ -45,6 +64,16 @@ def run_statistical(snapshot: FeatureSnapshot, baseline: BaselineEngine, critica
         if abs(z) < 1.5:
             continue
         b = baseline.baselines[feature].stat()
+        # Effect-size gate: require a materially large absolute (or relative) change.
+        delta = abs(float(value) - b.median)
+        floor = MIN_EFFECT.get(feature, 0.0)
+        if delta < floor:
+            continue
+        rel_floor = MIN_RELATIVE.get(feature)
+        if rel_floor is not None:
+            denom = max(abs(b.median), 1e-9)
+            if delta / denom < rel_floor:
+                continue
         results.append(
             DetectorResult(
                 detector="robust_zscore",

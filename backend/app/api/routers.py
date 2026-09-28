@@ -148,3 +148,43 @@ async def simulate(body: SimulateBody, request: Request) -> dict:
     lines = generate(body.scenario, max(1, min(body.count, 2000)))
     await _pipeline(request).feed_many(lines)
     return {"scenario": body.scenario.upper(), "injected": len(lines)}
+
+
+# ---------- real datasets (KIOXIA SSD) ----------
+class ReplayBody(BaseModel):
+    path: str
+    rate_hz: float | None = None
+    max_lines: int | None = 20000
+
+
+@router.get("/datasets")
+def list_datasets() -> dict:
+    from app.config.settings import get_settings
+    from app.ingestion.dataset_replay import discover
+
+    settings = get_settings()
+    items = discover()
+    return {
+        "data_root": str(settings.resolved_data_root()),
+        "dataset_dir": str(settings.resolved_dataset_dir()),
+        "count": len(items),
+        "datasets": [
+            {
+                "key": d.key, "path": d.path,
+                "size_mb": round(d.size_bytes / 1e6, 1),
+                "lines_estimate": d.lines_estimate,
+                "has_labels": d.has_labels,
+            }
+            for d in items
+        ],
+    }
+
+
+@router.post("/replay")
+async def replay(body: ReplayBody, request: Request) -> dict:
+    from pathlib import Path
+
+    if not Path(body.path).exists():
+        raise HTTPException(404, detail=f"dataset file not found: {body.path}")
+    _pipeline(request).replay_dataset(body.path, rate_hz=body.rate_hz, max_lines=body.max_lines)
+    return {"replaying": body.path, "rate_hz": body.rate_hz, "max_lines": body.max_lines}

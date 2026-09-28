@@ -6,6 +6,7 @@ import { apiGet, apiPatch, apiPost } from "./client";
 import type {
   Anomaly,
   BaselineStat,
+  DatasetList,
   Incident,
   LogRow,
   Stats,
@@ -110,6 +111,25 @@ export function useSimulate() {
       qc.invalidateQueries({ queryKey: ["stats"] });
       qc.invalidateQueries({ queryKey: ["anomalies"] });
       qc.invalidateQueries({ queryKey: ["incidents"] });
+    },
+  });
+}
+
+export function useDatasets() {
+  return useQuery({
+    queryKey: ["datasets"],
+    queryFn: () => apiGet<DatasetList>("/api/datasets"),
+    staleTime: 30_000,
+  });
+}
+
+export function useReplay() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (v: { path: string; rate_hz?: number; max_lines?: number }) =>
+      apiPost<{ replaying: string; rate_hz: number; max_lines: number }>("/api/replay", v),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["stats"] });
     },
   });
 }

@@ -79,7 +79,10 @@ class FeatureBaseline:
         )
 
     def robust_z(self, x: float) -> float:
-        """Modified z-score using MAD. Falls back to std when MAD==0."""
+        """Modified z-score using MAD. Falls back to std, then to a degenerate
+        guard: a departure from a perfectly flat baseline is a clear anomaly, so
+        return a large capped sigma rather than 0 (the effect-size gate in the
+        detector still blocks trivially small departures)."""
         if self.state() != ACTIVE:
             return 0.0
         arr = np.array(self._hist)
@@ -88,7 +91,12 @@ class FeatureBaseline:
         if mad > 1e-9:
             return 0.6745 * (x - med) / mad
         std = float(arr.std())
-        return (x - med) / std if std > 1e-9 else 0.0
+        if std > 1e-9:
+            return (x - med) / std
+        # Degenerate: zero-variance baseline. Any real departure => strong signal.
+        if abs(x - med) <= 1e-9:
+            return 0.0
+        return 12.0 if x > med else -12.0
 
 
 class BaselineEngine:

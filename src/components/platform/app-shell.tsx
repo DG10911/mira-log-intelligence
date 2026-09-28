@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import {
   Activity,
   AlertTriangle,
+  Database,
   FileText,
   Gauge,
   LayoutDashboard,
@@ -28,6 +29,7 @@ const NAV = [
   { href: "/templates", label: "Templates", icon: Radio },
   { href: "/baseline", label: "Baseline", icon: Gauge },
   { href: "/system", label: "System Health", icon: Activity },
+  { href: "/datasets", label: "Real Datasets", icon: Database },
   { href: "/simulator", label: "Attack Simulator", icon: Swords },
 ];
 

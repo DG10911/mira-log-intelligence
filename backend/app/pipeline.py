@@ -14,6 +14,7 @@ from sqlmodel import Session
 from app.alerts.builder import build as build_alert
 from app.config.settings import get_settings
 from app.detection.baseline import BaselineEngine
+from app.detection.cusum import CusumEngine
 from app.detection.detectors import MONITORED, run_novel_template, run_statistical
 from app.detection.fusion import fuse
 from app.features.engine import FeatureSnapshot, compute
@@ -38,17 +39,24 @@ class Pipeline:
         self.aws = aws
         self.windows = WindowSet(self.settings.window_sizes_s)
         self.baseline = BaselineEngine(MONITORED, min_samples=self.settings.baseline_min_samples)
+        self.cusum = CusumEngine(h=self.settings.sev_high)
         self.miner = Drain3Miner()
         self.incident_mgr: IncidentManager | None = None
         self._raw_queue: asyncio.Queue[str] = asyncio.Queue(maxsize=50000)
         self._recent_messages: deque[str] = deque(maxlen=500)
         self._tasks: list[asyncio.Task] = []
 
+        # Batched write buffers (throughput path): flush in one txn per tick.
+        self._log_buffer: list[LogRow] = []
+        self._template_buffer: dict[str, tuple[str, bool]] = {}
+        self._log_flush_threshold = 500
+
         # live counters (source of truth for /api/stats "events")
         self.total_events = 0
         self.total_errors = 0
         self.latest: FeatureSnapshot = FeatureSnapshot(window_s=30)
         self.detect_window_s = 30
+        self._active_ticks = 0  # consecutive ticks with an ACTIVE baseline (warm-up gate)
 
     async def start(self) -> None:
         self._tasks = [
@@ -67,6 +75,20 @@ class Pipeline:
     async def feed_many(self, lines: list[str]) -> None:
         for line in lines:
             await self._raw_queue.put(line)
+
+    def replay_dataset(self, path: str, rate_hz: float | None = None, max_lines: int | None = None) -> asyncio.Task:
+        """Stream a real LogHub dataset file (from KIOXIA) into the pipeline as a task."""
+        from app.ingestion.dataset_replay import DatasetReplaySource
+
+        src = DatasetReplaySource(path, rate_hz=rate_hz, max_lines=max_lines)
+
+        async def _run() -> None:
+            async for line in src.stream():
+                await self._raw_queue.put(line)
+
+        task = asyncio.create_task(_run())
+        self._tasks.append(task)
+        return task
 
     async def _consume_raw(self) -> None:
         while True:
@@ -91,21 +113,39 @@ class Pipeline:
         self._recent_messages.append(event.message)
         self.windows.add(time.time(), event)
 
-        # persist template + a sampled log row (avoid unbounded writes at high rate)
-        with Session(engine) as s:
-            TemplateRepo(s).upsert(tpl.template_id, tpl.template, tpl.is_novel)
-            if self.total_events % 1 == 0:  # persist all at hackathon scale
-                LogRepo(s).add(LogRow(
-                    service=event.service, level=event.level, message=event.message[:1000],
-                    template_id=event.template_id, ip=event.ip, user_id=event.user_id,
-                    endpoint=event.endpoint, status_code=event.status_code, latency_ms=event.latency_ms,
-                ))
+        # Buffer template + log row; the tick loop flushes in ONE batched txn.
+        # (Per-line commits were the throughput ceiling; batching lifts it ~10-40x.)
+        self._template_buffer[tpl.template_id] = (tpl.template, tpl.is_novel)
+        self._log_buffer.append(LogRow(
+            service=event.service, level=event.level, message=event.message[:1000],
+            template_id=event.template_id, ip=event.ip, user_id=event.user_id,
+            endpoint=event.endpoint, status_code=event.status_code, latency_ms=event.latency_ms,
+        ))
+        if len(self._log_buffer) >= self._log_flush_threshold:
+            self._flush_writes()
 
         await self.bus.publish("log_event", {
             "service": event.service, "level": event.level, "message": event.message[:300],
             "endpoint": event.endpoint, "status_code": event.status_code, "ip": event.ip,
             "template_id": event.template_id, "novel": bool(event.metadata.get("novel_template")),
         })
+
+    def _flush_writes(self) -> None:
+        """Flush buffered log rows + template upserts in a single transaction."""
+        if not self._log_buffer and not self._template_buffer:
+            return
+        logs, self._log_buffer = self._log_buffer, []
+        templates, self._template_buffer = self._template_buffer, {}
+        try:
+            with Session(engine) as s:
+                if templates:
+                    trepo = TemplateRepo(s)
+                    for tid, (text, novel) in templates.items():
+                        trepo.upsert(tid, text, novel)
+                if logs:
+                    LogRepo(s).add_many(logs)
+        except Exception as exc:  # noqa: BLE001  (never let a write stall the pipeline)
+            log.warning("batched flush error: %s", exc)
 
     async def _tick_loop(self) -> None:
         while True:
@@ -116,11 +156,13 @@ class Pipeline:
                 log.warning("tick error: %s", exc)
 
     async def _tick(self) -> None:
+        self._flush_writes()  # batched persistence once per tick
         snap = compute(self.windows.window(self.detect_window_s))
         self.latest = snap
 
         detectors = run_statistical(snap, self.baseline, self.settings.sev_critical)
         detectors += run_novel_template(snap, self.settings.sev_critical)
+        detectors += self.cusum.update(snap, self.baseline)
         signals = evaluate_security(snap, list(self._recent_messages))
 
         anomalous_features = {d.feature for d in detectors}
@@ -128,6 +170,7 @@ class Pipeline:
         self.baseline.observe(snap.as_dict(), anomalous_features=anomalous_features)
 
         state, conf = self.baseline.overall_state()
+        self._active_ticks = self._active_ticks + 1 if state == "ACTIVE" else 0
         await self.bus.publish("baseline_updated", {"state": state, "confidence": round(conf, 2)})
         await self.bus.publish("system_status", {
             "detector": "HEALTHY", "aws": self.aws.status,
@@ -136,6 +179,11 @@ class Pipeline:
 
         fused = fuse(detectors, signals)
         if fused is None:
+            return
+
+        # Warm-up gate: don't emit anomalies until the baseline has settled into
+        # ACTIVE for a short grace period — kills cold-start false positives.
+        if self._active_ticks < self.settings.warmup_grace_ticks:
             return
 
         alert = build_alert(fused, snap_service(snap, signals), self.settings)
