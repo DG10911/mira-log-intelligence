@@ -6,6 +6,12 @@
 
 MIRA ingests live log streams, mines templates online, learns an **adaptive baseline** of normal behaviour, and fuses statistical, template, and security detectors into **explainable, correlated incidents** — streamed to a real-time console. Built for healthcare-grade infrastructure (EMR, PACS, LIS, Pharmacy, Billing), it works for any system that emits logs.
 
+### 🌐 [**▶ Live Demo — sacramento-snowy-eight.vercel.app**](https://sacramento-snowy-eight.vercel.app)
+
+[![Live Demo](https://img.shields.io/badge/▶_Live_Demo-Open-brightgreen?style=for-the-badge&logo=vercel&logoColor=white)](https://sacramento-snowy-eight.vercel.app)
+
+> Frontend on Vercel, backend tunnelled from the live environment (keeps the KIOXIA dataset replay, PostgreSQL, Redis, and AWS all real). Best viewed while the backend is running.
+
 ![Python](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-async-009688?logo=fastapi&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
