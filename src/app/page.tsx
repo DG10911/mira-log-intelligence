@@ -28,7 +28,7 @@ import {
 
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Marquee } from "@/components/ui/marquee";
-import { MascotBot } from "@/components/platform/mascot-bot";
+import { MascotImage } from "@/components/platform/mascot-image";
 
 function useMouse() {
   const [m, setM] = useState({ x: 0, y: 0 });
@@ -214,7 +214,7 @@ export default function Landing() {
 
         <div className="relative h-[520px]">
           <Orb className="left-10 top-6 opacity-70" size={180} />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><MascotBot size={380} /></div>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><MascotImage pose="hero" size={420} /></div>
 
           <FloatCard mouse={mouse} depth={18} className="left-0 top-2 w-64 p-4">
             <div className="mb-3 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50">Hospital Systems</div>
@@ -285,18 +285,23 @@ export default function Landing() {
           </div>
           <div className="relative grid min-h-[340px] place-items-center">
             <Orb size={240} className="opacity-80" />
-            <div className="relative"><MascotBot size={260} /></div>
+            <div className="relative"><MascotImage pose="laptop" size={320} glow={false} /></div>
           </div>
         </div>
       </section>
 
       {/* HOW IT WORKS — real pipeline */}
       <section id="how-it-works" className="relative z-10 mx-auto max-w-7xl px-6 pb-24">
-        <Eyebrow>— 02 / How It Works</Eyebrow>
-        <h2 className="mb-12 max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">From signals to solutions<span className="text-[#15803d]">.</span></h2>
+        <div className="mb-12 flex items-end justify-between gap-8">
+          <div>
+            <Eyebrow>— 02 / How It Works</Eyebrow>
+            <h2 className="max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">From signals to solutions<span className="text-[#15803d]">.</span></h2>
+          </div>
+          <MascotImage pose="point" size={200} className="hidden lg:block" glow={false} />
+        </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {PIPELINE.map(({ n, icon: Icon, t, d }, i) => (
-            <motion.div key={n} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: (i % 4) * 0.06 }}
+            <motion.div key={n} initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: (i % 4) * 0.06 }}
               className="relative rounded-2xl border border-black/10 bg-white/70 p-5">
               <div className="mb-3 flex items-center justify-between">
                 <span className="grid size-10 place-items-center rounded-xl bg-[#dcfce7] text-[#15803d]"><Icon className="size-5" /></span>
@@ -311,11 +316,16 @@ export default function Landing() {
 
       {/* CAPABILITIES */}
       <section className="relative z-10 mx-auto max-w-7xl px-6 pb-24">
-        <Eyebrow>— 03 / Capabilities</Eyebrow>
-        <h2 className="mb-12 max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">Detection you can actually trust<span className="text-[#15803d]">.</span></h2>
+        <div className="mb-12 flex items-end justify-between gap-8">
+          <div>
+            <Eyebrow>— 03 / Capabilities</Eyebrow>
+            <h2 className="max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">Detection you can actually trust<span className="text-[#15803d]">.</span></h2>
+          </div>
+          <MascotImage pose="xray" size={200} className="hidden lg:block" glow={false} />
+        </div>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {CAPABILITIES.map(({ icon: Icon, t, d }) => (
-            <motion.div key={t} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
+            <motion.div key={t} initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
               className="group rounded-2xl border border-black/10 bg-white/70 p-6 transition-all hover:-translate-y-1 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.25)]">
               <div className="mb-4 grid size-11 place-items-center rounded-xl bg-[#dcfce7] text-[#15803d]"><Icon className="size-5" /></div>
               <h3 className="text-lg font-bold">{t}</h3>
@@ -332,11 +342,11 @@ export default function Landing() {
             <Eyebrow>— 04 / Use Cases</Eyebrow>
             <h2 className="max-w-2xl text-4xl font-extrabold leading-[1.05] tracking-tight md:text-6xl">Built for every part of hospital infrastructure<span className="text-[#15803d]">.</span></h2>
           </div>
-          <MascotBot size={140} className="hidden lg:block" />
+          <MascotImage pose="wave" size={180} className="hidden lg:block" />
         </div>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {USE_CASES.map(({ n, icon: Icon, title, body }) => (
-            <motion.div key={n} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
+            <motion.div key={n} initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
               className="group relative overflow-hidden rounded-2xl border border-black/10 bg-white/70 p-6 transition-all hover:-translate-y-1 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.25)]">
               <div className="mb-4 flex items-center justify-between">
                 <span className="font-mono text-xs text-[#101610]/40">{n} —</span>
@@ -379,7 +389,7 @@ export default function Landing() {
         <div className="relative overflow-hidden rounded-[2rem] bg-[#0b3b2e] px-8 py-20 text-center text-white">
           <div aria-hidden className="pointer-events-none absolute -bottom-24 left-1/2 size-[28rem] -translate-x-1/2 rounded-full bg-[#22c55e]/30 blur-[110px]" />
           <div className="relative">
-            <MascotBot size={130} className="mx-auto mb-4" />
+            <MascotImage pose="cheer" size={150} className="mx-auto mb-4" glow={false} />
             <h2 className="mx-auto max-w-2xl text-4xl font-extrabold tracking-tight md:text-6xl">Stay ahead of every incident<span className="text-[#22c55e]">.</span></h2>
             <p className="mx-auto mt-4 max-w-xl text-white/60">One platform. Complete visibility. From clinical to operational systems.</p>
             <Link href="/dashboard" className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#22c55e] px-8 py-4 text-base font-bold text-[#101610] transition-transform hover:scale-[1.03]">Launch Console <ArrowUpRight className="size-4" /></Link>
