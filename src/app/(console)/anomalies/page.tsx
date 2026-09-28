@@ -50,17 +50,17 @@ export default function AnomaliesPage() {
       ) : !data || data.length === 0 ? (
         <EmptyState label="No anomalies detected yet." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-white/10">
-          <table className="w-full text-sm">
-            <thead className="bg-white/[0.04] text-left text-xs uppercase tracking-wider text-white/40">
+        <div className="overflow-x-auto rounded-xl border border-white/10">
+          <table className="w-full min-w-[720px] text-sm">
+            <thead className="bg-white/[0.04] text-left text-xs uppercase tracking-wider text-white/50">
               <tr>
-                <th className="px-4 py-3">Time</th>
-                <th className="px-4 py-3">Severity</th>
-                <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3">Service</th>
-                <th className="px-4 py-3">Score</th>
-                <th className="px-4 py-3">Conf.</th>
-                <th className="px-4 py-3">Status</th>
+                <th scope="col" className="px-4 py-3">Time</th>
+                <th scope="col" className="px-4 py-3">Severity</th>
+                <th scope="col" className="px-4 py-3">Type</th>
+                <th scope="col" className="px-4 py-3">Service</th>
+                <th scope="col" className="px-4 py-3">Score</th>
+                <th scope="col" className="px-4 py-3">Conf.</th>
+                <th scope="col" className="px-4 py-3">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -68,15 +68,24 @@ export default function AnomaliesPage() {
                 <tr
                   key={a.id}
                   onClick={() => setSelected(a)}
-                  className="cursor-pointer bg-white/[0.01] hover:bg-white/[0.04]"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setSelected(a);
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View anomaly: ${a.title}, ${a.severity}`}
+                  className="cursor-pointer bg-white/[0.01] hover:bg-white/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-lime/60"
                 >
-                  <td className="px-4 py-3 text-white/60">{new Date(a.ts).toLocaleTimeString()}</td>
+                  <td className="px-4 py-3 text-white/70">{new Date(a.ts).toLocaleTimeString()}</td>
                   <td className="px-4 py-3"><SeverityBadge severity={a.severity} /></td>
                   <td className="px-4 py-3">{a.title}</td>
-                  <td className="px-4 py-3 text-white/60">{a.service}</td>
+                  <td className="px-4 py-3 text-white/70">{a.service}</td>
                   <td className="px-4 py-3 tabular-nums">{a.score.toFixed(2)}</td>
-                  <td className="px-4 py-3 tabular-nums text-white/60">{(a.confidence * 100).toFixed(0)}%</td>
-                  <td className="px-4 py-3 text-white/60">{a.status}</td>
+                  <td className="px-4 py-3 tabular-nums text-white/70">{(a.confidence * 100).toFixed(0)}%</td>
+                  <td className="px-4 py-3 text-white/70">{a.status}</td>
                 </tr>
               ))}
             </tbody>

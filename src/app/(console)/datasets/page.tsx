@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Database, HardDrive, Play, Tag } from "lucide-react";
 
 import { useDatasets, useReplay } from "@/lib/api/hooks";
-import { PageHeader, ErrorState } from "@/components/platform/shared";
+import { PageHeader, ErrorState, LoadingState, EmptyState } from "@/components/platform/shared";
 
 export default function DatasetsPage() {
   const { data, isLoading, error } = useDatasets();
@@ -68,7 +68,11 @@ export default function DatasetsPage() {
         </div>
       )}
 
-      {isLoading && <div className="text-white/50">Scanning KIOXIA SSD…</div>}
+      {isLoading && <LoadingState label="Scanning KIOXIA SSD…" />}
+
+      {!isLoading && data && data.datasets.length === 0 && (
+        <EmptyState label="No datasets found on the SSD. Run scripts/download_datasets.py." />
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(data?.datasets ?? []).map((d) => (

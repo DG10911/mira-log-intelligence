@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { useIncident, useIncidents, useTransitionIncident } from "@/lib/api/hooks";
+import { dispatchMira } from "@/components/mira/MiraController";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -45,8 +46,17 @@ export default function IncidentsPage() {
           {data.map((inc) => (
             <div
               key={inc.id}
-              className="flex cursor-pointer items-center gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 hover:bg-white/[0.05]"
+              className="flex cursor-pointer items-center gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 hover:bg-white/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-lime/60"
               onClick={() => setOpenId(inc.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setOpenId(inc.id);
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label={`View incident: ${inc.title}, ${inc.severity}`}
             >
               <SeverityBadge severity={inc.severity} />
               <div className="min-w-0 flex-1">
@@ -79,9 +89,24 @@ export default function IncidentsPage() {
                       size="sm"
                       className="h-7 bg-brand text-white hover:bg-brand/90"
                       disabled={transition.isPending}
-                      onClick={() =>
-                        transition.mutate({ id: detail.data!.id, to_state: NEXT_STATE[detail.data!.status] })
-                      }
+                      onClick={() => {
+                        const to = NEXT_STATE[detail.data!.status];
+                        transition.mutate(
+                          { id: detail.data!.id, to_state: to },
+                          {
+                            onSuccess: () => {
+                              // Real user action → MIRA's calm "resolved" beat.
+                              if (to === "RESOLVED") {
+                                dispatchMira({
+                                  reaction: "SUCCESS",
+                                  key: `resolved-${detail.data!.id}`,
+                                  bubble: { text: "Incident resolved", detail: `#${detail.data!.id} · back to calm`, tone: "brand" },
+                                });
+                              }
+                            },
+                          },
+                        );
+                      }}
                     >
                       → {NEXT_STATE[detail.data.status]}
                     </Button>

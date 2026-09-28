@@ -36,7 +36,7 @@ export function AlertFeed() {
                     <span className="text-sm font-medium">{String(d.title ?? a.type)}</span>
                     <SeverityBadge severity={(d.severity as Severity) ?? "LOW"} />
                   </div>
-                  <div className="mt-1 text-xs text-white/50">{String(d.assessment ?? d.reason ?? "")}</div>
+                  <div className="mt-1 text-xs text-white/70">{String(d.assessment ?? d.reason ?? "")}</div>
                   <div className="mt-1 text-[11px] text-white/30">
                     {String(d.service ?? "platform")} · {new Date(a.ts).toLocaleTimeString()}
                   </div>

@@ -22,17 +22,17 @@ export default function BaselinePage() {
       ) : !data || data.length === 0 ? (
         <EmptyState label="Baseline is bootstrapping…" />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-white/10">
-          <table className="w-full text-sm">
-            <thead className="bg-white/[0.04] text-left text-xs uppercase tracking-wider text-white/40">
+        <div className="overflow-x-auto rounded-xl border border-white/10">
+          <table className="w-full min-w-[720px] text-sm">
+            <thead className="bg-white/[0.04] text-left text-xs uppercase tracking-wider text-white/50">
               <tr>
-                <th className="px-4 py-3">Feature</th>
-                <th className="px-4 py-3">State</th>
-                <th className="px-4 py-3">Median</th>
-                <th className="px-4 py-3">MAD</th>
-                <th className="px-4 py-3">EWMA (fast/slow)</th>
-                <th className="px-4 py-3">Samples</th>
-                <th className="px-4 py-3">Confidence</th>
+                <th scope="col" className="px-4 py-3">Feature</th>
+                <th scope="col" className="px-4 py-3">State</th>
+                <th scope="col" className="px-4 py-3">Median</th>
+                <th scope="col" className="px-4 py-3">MAD</th>
+                <th scope="col" className="px-4 py-3">EWMA (fast/slow)</th>
+                <th scope="col" className="px-4 py-3">Samples</th>
+                <th scope="col" className="px-4 py-3">Confidence</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">

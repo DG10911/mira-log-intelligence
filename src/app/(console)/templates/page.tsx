@@ -16,15 +16,15 @@ export default function TemplatesPage() {
       ) : !data || data.length === 0 ? (
         <EmptyState label="No templates mined yet." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-white/10">
-          <table className="w-full text-sm">
-            <thead className="bg-white/[0.04] text-left text-xs uppercase tracking-wider text-white/40">
+        <div className="overflow-x-auto rounded-xl border border-white/10">
+          <table className="w-full min-w-[720px] text-sm">
+            <thead className="bg-white/[0.04] text-left text-xs uppercase tracking-wider text-white/50">
               <tr>
-                <th className="px-4 py-3">ID</th>
-                <th className="px-4 py-3">Template</th>
-                <th className="px-4 py-3">Frequency</th>
-                <th className="px-4 py-3">Last Seen</th>
-                <th className="px-4 py-3">Status</th>
+                <th scope="col" className="px-4 py-3">ID</th>
+                <th scope="col" className="px-4 py-3">Template</th>
+                <th scope="col" className="px-4 py-3">Frequency</th>
+                <th scope="col" className="px-4 py-3">Last Seen</th>
+                <th scope="col" className="px-4 py-3">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">

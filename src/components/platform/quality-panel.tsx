@@ -17,22 +17,44 @@ function Metric({
 }) {
   return (
     <div className="flex flex-col gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-4">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-white/40">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-white/70">
         <Icon className="size-3.5 text-brand-accent" /> {label}
       </div>
       <div className="text-2xl font-bold tabular-nums text-lime">{value}</div>
-      <div className="text-xs text-white/50">{sub}</div>
+      <div className="text-xs text-white/70">{sub}</div>
     </div>
   );
 }
 
 export function QualityPanel() {
-  const { data: q } = useQualityMetrics();
-  if (!q) return null;
+  const { data: q, isError } = useQualityMetrics();
+
+  if (isError) {
+    return (
+      <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm text-red-300">
+        Quality metrics unavailable — backend not reachable on :8000.
+      </div>
+    );
+  }
+
+  // Skeleton (reserve height) while loading, so the panel never causes layout shift.
+  if (!q) {
+    return (
+      <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="h-[104px] animate-pulse rounded-xl border border-white/10 bg-white/[0.03]" />
+        ))}
+      </div>
+    );
+  }
+
+  const fpBefore = q.controlled.false_positives_before;
+  const fpAfter = q.controlled.false_positives_after;
+  const fpReduction = fpBefore > 0 ? Math.round((1 - fpAfter / fpBefore) * 100) : 0;
 
   return (
     <div className="mb-6">
-      <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/40">
+      <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/70">
         <Award className="size-3.5 text-lime" /> Detection quality (measured, reproducible)
       </div>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -57,10 +79,8 @@ export function QualityPanel() {
         <Metric
           icon={Gauge}
           label="False positives"
-          value={`−${Math.round(
-            (1 - q.controlled.false_positives_after / q.controlled.false_positives_before) * 100,
-          )}%`}
-          sub={`${q.controlled.false_positives_before} → ${q.controlled.false_positives_after} after tuning`}
+          value={`−${fpReduction}%`}
+          sub={`${fpBefore} → ${fpAfter} after tuning`}
         />
       </div>
     </div>

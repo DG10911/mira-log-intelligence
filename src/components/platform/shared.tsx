@@ -51,8 +51,12 @@ export function LiveIndicator() {
     disconnected: { c: "bg-red-500", t: "OFFLINE" },
   }[status];
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80">
-      <span className={cn("size-2 rounded-full", map.c)} />
+    <span
+      role="status"
+      aria-live="polite"
+      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80"
+    >
+      <span aria-hidden className={cn("size-2 rounded-full", map.c)} />
       {map.t}
     </span>
   );
@@ -60,9 +64,9 @@ export function LiveIndicator() {
 
 export function LastUpdated() {
   const last = useLiveStore((s) => s.lastUpdated);
-  if (!last) return <span className="text-xs text-white/40">—</span>;
+  if (!last) return <span className="text-xs text-white/70">—</span>;
   const secs = Math.max(0, Math.round((Date.now() - last) / 1000));
-  return <span className="text-xs text-white/40">updated {secs}s ago</span>;
+  return <span className="text-xs text-white/70">updated {secs}s ago</span>;
 }
 
 export function StatCard({
@@ -97,16 +101,16 @@ export function StatCard({
       className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-lime/30"
     >
       <BorderBeam size={90} duration={7} colorFrom={beam.from} colorTo={beam.to} />
-      <div className="text-xs font-medium uppercase tracking-wider text-white/40">{label}</div>
+      <div className="text-xs font-medium uppercase tracking-wider text-white/70">{label}</div>
       <div className={cn("mt-2 text-3xl font-bold tabular-nums", toneCls)}>{value}</div>
-      {hint && <div className="mt-1 text-xs text-white/40">{hint}</div>}
+      {hint && <div className="mt-1 text-xs text-white/70">{hint}</div>}
     </motion.div>
   );
 }
 
 export function LoadingState({ label = "Loading…" }: { label?: string }) {
   return (
-    <div className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] py-16 text-white/50">
+    <div className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] py-16 text-white/70">
       <Loader2 className="size-4 animate-spin" /> {label}
     </div>
   );
@@ -122,7 +126,7 @@ export function ErrorState({ message }: { message?: string }) {
 
 export function EmptyState({ label = "Nothing here yet." }: { label?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] py-16 text-white/40">
+    <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] py-16 text-white/70">
       <Inbox className="size-5" /> {label}
     </div>
   );
@@ -132,7 +136,7 @@ export function PageHeader({ title, subtitle }: { title: string; subtitle?: stri
   return (
     <div className="mb-6">
       <h1 className="text-2xl font-bold tracking-tight text-white">{title}</h1>
-      {subtitle && <p className="mt-1 text-sm text-white/50">{subtitle}</p>}
+      {subtitle && <p className="mt-1 text-sm text-white/70">{subtitle}</p>}
     </div>
   );
 }
