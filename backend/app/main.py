@@ -50,12 +50,23 @@ def create_app() -> FastAPI:
     app = FastAPI(title=settings.app_name, version="0.1.0", lifespan=lifespan)
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[settings.frontend_origin, "http://localhost:3000", "http://localhost:3001"],
+        allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
     app.include_router(api_router)
+
+    @app.get("/")
+    def root() -> dict:
+        return {
+            "service": settings.app_name,
+            "status": "running",
+            "docs": "/docs",
+            "health": "/health",
+            "api": "/api/stats",
+            "websocket": "/ws/events",
+        }
 
     @app.get("/health")
     def health() -> dict:

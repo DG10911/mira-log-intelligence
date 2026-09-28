@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "motion/react";
 import {
@@ -171,9 +172,11 @@ export default function Home() {
             <Button variant="ghost" className="hidden text-white/80 hover:bg-white/10 hover:text-white md:inline-flex">
               Contact
             </Button>
-            <Button className="bg-brand text-white shadow-[0_0_24px] shadow-brand/40 hover:bg-brand/90">
-              Request a Demo
-            </Button>
+            <Link href="/dashboard">
+              <Button className="bg-brand text-white shadow-[0_0_24px] shadow-brand/40 hover:bg-brand/90">
+                Launch Console
+              </Button>
+            </Link>
             <button className="md:hidden" aria-label="Menu">
               <Menu className="size-5" />
             </button>
@@ -234,9 +237,11 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.65 }}
               className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start"
             >
-              <ShimmerButton background="#17a34a" className="px-8 py-3.5 text-base font-semibold shadow-2xl shadow-brand/40">
-                Request a Demo <ArrowRight className="ml-2 size-4" />
-              </ShimmerButton>
+              <Link href="/dashboard">
+                <ShimmerButton background="#17a34a" className="px-8 py-3.5 text-base font-semibold shadow-2xl shadow-brand/40">
+                  Launch Console <ArrowRight className="ml-2 size-4" />
+                </ShimmerButton>
+              </Link>
               <Button variant="outline" className="border-white/20 bg-white/5 px-8 py-6 text-base text-white backdrop-blur hover:bg-white/10 hover:text-white">
                 Explore Solutions
               </Button>
