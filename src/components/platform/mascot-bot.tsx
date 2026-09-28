@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export function MascotBot({
   size = 320,
   className,
-  eyeColor = "#bff23a",
+  eyeColor = "#22c55e",
 }: {
   size?: number;
   className?: string;

@@ -49,7 +49,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex h-20 items-center gap-2 border-b border-white/10 px-4">
           <div className="relative -my-2">
             <div className="absolute inset-0 -z-10 rounded-full bg-lime/20 blur-xl" />
-            <MascotBot size={56} eyeColor="#bff23a" />
+            <MascotBot size={56} eyeColor="#22c55e" />
           </div>
           <div className="leading-tight">
             <div className="text-sm font-bold">
@@ -76,7 +76,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-lime shadow-[0_0_12px] shadow-lime/60"
                   />
                 )}
-                <Icon className={cn("size-4 transition-transform group-hover:scale-110", active && "drop-shadow-[0_0_6px_#bff23a]")} />
+                <Icon className={cn("size-4 transition-transform group-hover:scale-110", active && "drop-shadow-[0_0_6px_#22c55e]")} />
                 {label}
               </Link>
             );

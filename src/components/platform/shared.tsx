@@ -80,14 +80,14 @@ export function StatCard({
     default: "text-white",
     critical: "text-red-400 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]",
     warn: "text-amber-300",
-    good: "text-lime drop-shadow-[0_0_10px_rgba(191,242,58,0.4)]",
+    good: "text-lime drop-shadow-[0_0_10px_rgba(34,197,94,0.45)]",
   }[tone];
   const beam =
     tone === "critical"
       ? { from: "#f87171", to: "#fca5a5" }
       : tone === "warn"
         ? { from: "#fbbf24", to: "#fde68a" }
-        : { from: "#17a34a", to: "#bff23a" };
+        : { from: "#17a34a", to: "#22c55e" };
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}

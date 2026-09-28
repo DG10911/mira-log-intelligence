@@ -42,7 +42,7 @@ export function ConsoleMascot() {
       </AnimatePresence>
       <div className="relative">
         <div className="absolute inset-0 -z-10 rounded-full bg-lime/20 blur-2xl" />
-        <MascotBot size={120} eyeColor="#bff23a" />
+        <MascotBot size={120} eyeColor="#22c55e" />
         <span
           className={`absolute right-6 top-2 size-2.5 rounded-full ${
             status === "connected" ? "bg-lime" : status === "connecting" ? "bg-amber-400" : "bg-red-500"

@@ -41,6 +41,34 @@ function useMouse() {
   return m;
 }
 
+function Counter({ value }: { value: string }) {
+  const m = value.match(/^(\D*)([\d.]+)(.*)$/);
+  const prefix = m?.[1] ?? "";
+  const num = m ? parseFloat(m[2]) : 0;
+  const suffix = m?.[3] ?? "";
+  const decimals = m && m[2].includes(".") ? m[2].split(".")[1].length : 0;
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const start = performance.now();
+    const dur = 1400;
+    const tick = (ts: number) => {
+      const p = Math.min(1, (ts - start) / dur);
+      setN(num * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [num]);
+  return (
+    <span className="tabular-nums">
+      {prefix}
+      {n.toFixed(decimals)}
+      {suffix}
+    </span>
+  );
+}
+
 function Orb({ className = "", size = 260 }: { className?: string; size?: number }) {
   return (
     <div
@@ -49,7 +77,7 @@ function Orb({ className = "", size = 260 }: { className?: string; size?: number
       style={{
         width: size,
         height: size,
-        background: "radial-gradient(circle at 35% 30%, #d6ff6e 0%, #bff23a 35%, #7fae1e 70%, transparent 72%)",
+        background: "radial-gradient(circle at 35% 30%, #86efac 0%, #22c55e 35%, #15803d 70%, transparent 72%)",
         filter: "blur(2px)",
         boxShadow: "0 0 90px 10px rgba(191,242,58,0.35)",
       }}
@@ -122,8 +150,8 @@ const CHIPS = ["Patient Registration", "EMR", "Radiology", "Labs", "Pharmacy", "
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-4 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-[#101610]/50">
-      <span className="h-px w-8 bg-[#7fae1e]" />
-      <span className="size-1.5 rounded-full bg-[#7fae1e]" />
+      <span className="h-px w-8 bg-[#15803d]" />
+      <span className="size-1.5 rounded-full bg-[#15803d]" />
       {children}
     </div>
   );
@@ -133,19 +161,19 @@ export default function Landing() {
   const mouse = useMouse();
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-[#eef1e8] text-[#101610]">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#eef5ee] text-[#101610]">
       {/* background grid + orbs */}
       <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute inset-0 [background-image:linear-gradient(#0000000a_1px,transparent_1px),linear-gradient(90deg,#0000000a_1px,transparent_1px)] [background-size:46px_46px] [mask-image:radial-gradient(ellipse_at_60%_10%,black,transparent_78%)]" />
-        <div className="absolute right-0 top-0 size-[42rem] rounded-full bg-[#bff23a]/25 blur-[130px]" />
-        <div className="absolute -left-40 top-1/3 size-[30rem] rounded-full bg-[#bff23a]/15 blur-[120px]" />
+        <div className="absolute right-0 top-0 size-[42rem] rounded-full bg-[#22c55e]/25 blur-[130px]" />
+        <div className="absolute -left-40 top-1/3 size-[30rem] rounded-full bg-[#22c55e]/15 blur-[120px]" />
       </div>
 
       {/* NAV */}
       <header className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-2 text-2xl font-extrabold tracking-tight">
-          <span className="grid size-8 place-items-center rounded-lg bg-[#101610] text-[#bff23a]"><Radar className="size-4" /></span>
-          MIRA<span className="text-[#7fae1e]">.</span>
+          <span className="grid size-8 place-items-center rounded-lg bg-[#101610] text-[#22c55e]"><Radar className="size-4" /></span>
+          MIRA<span className="text-[#15803d]">.</span>
         </div>
         <nav className="hidden items-center gap-8 text-sm font-medium text-[#101610]/70 md:flex">
           {["Product", "Use Cases", "How It Works", "Tech Stack", "Docs"].map((n) => (
@@ -164,10 +192,10 @@ export default function Landing() {
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className="text-5xl font-extrabold leading-[0.98] tracking-tight md:text-7xl">
             See the{" "}
             <span className="relative inline-block">
-              <span className="absolute inset-x-[-6px] inset-y-1 -z-0 block bg-[#bff23a]" />
+              <span className="absolute inset-x-[-6px] inset-y-1 -z-0 block bg-[#22c55e]" />
               <span className="relative z-10">signal</span>
             </span>{" "}
-            before it becomes an incident<span className="text-[#7fae1e]">.</span>
+            before it becomes an incident<span className="text-[#15803d]">.</span>
           </motion.h1>
           <p className="mt-6 max-w-md text-lg text-[#101610]/60">
             MIRA monitors your systems, detects abnormal behaviour, correlates security &amp;
@@ -178,7 +206,7 @@ export default function Landing() {
               Launch Console <ArrowUpRight className="size-4" />
             </Link>
             <button className="group inline-flex items-center gap-3 text-base font-semibold">
-              <span className="grid size-11 place-items-center rounded-full border border-black/20 transition-colors group-hover:bg-[#bff23a]"><Play className="size-4 fill-current" /></span>
+              <span className="grid size-11 place-items-center rounded-full border border-black/20 transition-colors group-hover:bg-[#22c55e]"><Play className="size-4 fill-current" /></span>
               Watch Demo
             </button>
           </div>
@@ -193,7 +221,7 @@ export default function Landing() {
             <ul className="space-y-2 font-mono text-xs">
               {[["EMR", "HEALTHY"], ["PACS", "MONITORING"], ["LIS", "HEALTHY"], ["PHARMACY", "HEALTHY"], ["BILLING", "MONITORING"]].map(([k, v]) => (
                 <li key={k} className="flex items-center justify-between">
-                  <span className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-[#7fae1e]" />{k}</span>
+                  <span className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-[#15803d]" />{k}</span>
                   <span className="text-[#101610]/40">{v}</span>
                 </li>
               ))}
@@ -201,24 +229,24 @@ export default function Landing() {
           </FloatCard>
 
           <FloatCard mouse={mouse} depth={28} className="bottom-24 left-2 w-60 overflow-hidden p-4">
-            <BorderBeam size={120} duration={6} colorFrom="#7fae1e" colorTo="#bff23a" />
-            <div className="mb-1 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50"><ArrowUpRight className="size-3 text-[#7fae1e]" /> Anomaly Detected</div>
-            <div className="flex items-center gap-2"><span className="size-2 rounded-full bg-[#7fae1e]" /><span className="text-lg font-bold">PACS</span></div>
+            <BorderBeam size={120} duration={6} colorFrom="#15803d" colorTo="#22c55e" />
+            <div className="mb-1 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50"><ArrowUpRight className="size-3 text-[#15803d]" /> Anomaly Detected</div>
+            <div className="flex items-center gap-2"><span className="size-2 rounded-full bg-[#15803d]" /><span className="text-lg font-bold">PACS</span></div>
             <div className="text-sm text-[#101610]/60">Error rate <span className="font-bold text-[#101610]">+742%</span></div>
             <div className="mt-2 flex h-10 items-end gap-0.5">
-              {[3, 4, 3, 5, 6, 5, 7, 9, 8, 12, 14, 13, 16, 18].map((h, i) => (<span key={i} className="w-1.5 rounded-sm bg-[#bff23a]" style={{ height: `${h * 2}px` }} />))}
+              {[3, 4, 3, 5, 6, 5, 7, 9, 8, 12, 14, 13, 16, 18].map((h, i) => (<span key={i} className="w-1.5 rounded-sm bg-[#22c55e]" style={{ height: `${h * 2}px` }} />))}
             </div>
           </FloatCard>
 
           <FloatCard mouse={mouse} depth={22} className="bottom-16 right-0 w-56 p-4">
-            <div className="mb-2 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50"><span className="mr-1.5 inline-block size-1.5 rounded-full bg-[#7fae1e]" /> Active Incidents</div>
+            <div className="mb-2 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50"><span className="mr-1.5 inline-block size-1.5 rounded-full bg-[#15803d]" /> Active Incidents</div>
             <div className="mb-3 flex items-center justify-between"><span className="text-3xl font-bold">2</span><ArrowRight className="size-4 text-[#101610]/40" /></div>
             <div className="mb-1 font-mono text-[11px] uppercase tracking-widest text-[#101610]/50">System Health</div>
             <div className="text-2xl font-bold">99.98%</div>
           </FloatCard>
 
           <FloatCard mouse={mouse} depth={12} className="right-0 top-4 w-44 border-none bg-transparent p-0 shadow-none">
-            <div className="font-mono text-[11px] uppercase leading-relaxed tracking-widest text-[#101610]/50"><span className="mr-2 inline-block h-px w-6 -translate-y-1 bg-[#7fae1e]" />Secure.<br />Reliable.<br />Observable.</div>
+            <div className="font-mono text-[11px] uppercase leading-relaxed tracking-widest text-[#101610]/50"><span className="mr-2 inline-block h-px w-6 -translate-y-1 bg-[#15803d]" />Secure.<br />Reliable.<br />Observable.</div>
           </FloatCard>
         </div>
       </section>
@@ -228,7 +256,7 @@ export default function Landing() {
         <p className="mb-3 text-center font-mono text-[11px] uppercase tracking-[0.25em] text-[#101610]/40">Built on a real, production-grade stack</p>
         <Marquee pauseOnHover className="[--duration:32s]">
           {STACK_MARQUEE.map((c) => (
-            <div key={c} className="mx-2 flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-1.5 text-sm font-medium text-[#101610]/70"><span className="size-1.5 rounded-full bg-[#7fae1e]" /> {c}</div>
+            <div key={c} className="mx-2 flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-1.5 text-sm font-medium text-[#101610]/70"><span className="size-1.5 rounded-full bg-[#15803d]" /> {c}</div>
           ))}
         </Marquee>
       </div>
@@ -239,7 +267,7 @@ export default function Landing() {
           <div>
             <Eyebrow>— 01 / Meet MIRA</Eyebrow>
             <h2 className="text-4xl font-extrabold leading-[1.05] tracking-tight md:text-6xl">
-              A real-time log intelligence &amp; security observability platform<span className="text-[#7fae1e]">.</span>
+              A real-time log intelligence &amp; security observability platform<span className="text-[#15803d]">.</span>
             </h2>
             <p className="mt-6 max-w-lg text-lg text-[#101610]/60">
               MIRA ingests live log streams, mines templates online, learns an adaptive baseline
@@ -249,7 +277,7 @@ export default function Landing() {
             <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
               {STATS.map((s) => (
                 <div key={s.l} className="rounded-2xl border border-black/10 bg-white/70 p-4">
-                  <div className="text-3xl font-extrabold text-[#101610]">{s.v}</div>
+                  <div className="text-3xl font-extrabold text-[#101610]"><Counter value={s.v} /></div>
                   <div className="mt-1 text-xs text-[#101610]/50">{s.l}</div>
                 </div>
               ))}
@@ -265,13 +293,13 @@ export default function Landing() {
       {/* HOW IT WORKS — real pipeline */}
       <section id="how-it-works" className="relative z-10 mx-auto max-w-7xl px-6 pb-24">
         <Eyebrow>— 02 / How It Works</Eyebrow>
-        <h2 className="mb-12 max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">From signals to solutions<span className="text-[#7fae1e]">.</span></h2>
+        <h2 className="mb-12 max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">From signals to solutions<span className="text-[#15803d]">.</span></h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {PIPELINE.map(({ n, icon: Icon, t, d }, i) => (
-            <motion.div key={n} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.45, delay: (i % 4) * 0.06 }}
+            <motion.div key={n} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: (i % 4) * 0.06 }}
               className="relative rounded-2xl border border-black/10 bg-white/70 p-5">
               <div className="mb-3 flex items-center justify-between">
-                <span className="grid size-10 place-items-center rounded-xl bg-[#eef3e0] text-[#7fae1e]"><Icon className="size-5" /></span>
+                <span className="grid size-10 place-items-center rounded-xl bg-[#dcfce7] text-[#15803d]"><Icon className="size-5" /></span>
                 <span className="font-mono text-xs text-[#101610]/40">{n}</span>
               </div>
               <h3 className="font-bold">{t}</h3>
@@ -284,12 +312,12 @@ export default function Landing() {
       {/* CAPABILITIES */}
       <section className="relative z-10 mx-auto max-w-7xl px-6 pb-24">
         <Eyebrow>— 03 / Capabilities</Eyebrow>
-        <h2 className="mb-12 max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">Detection you can actually trust<span className="text-[#7fae1e]">.</span></h2>
+        <h2 className="mb-12 max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">Detection you can actually trust<span className="text-[#15803d]">.</span></h2>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {CAPABILITIES.map(({ icon: Icon, t, d }) => (
-            <motion.div key={t} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.45 }}
+            <motion.div key={t} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
               className="group rounded-2xl border border-black/10 bg-white/70 p-6 transition-all hover:-translate-y-1 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.25)]">
-              <div className="mb-4 grid size-11 place-items-center rounded-xl bg-[#eef3e0] text-[#7fae1e]"><Icon className="size-5" /></div>
+              <div className="mb-4 grid size-11 place-items-center rounded-xl bg-[#dcfce7] text-[#15803d]"><Icon className="size-5" /></div>
               <h3 className="text-lg font-bold">{t}</h3>
               <p className="mt-2 text-sm text-[#101610]/60">{d}</p>
             </motion.div>
@@ -302,19 +330,19 @@ export default function Landing() {
         <div className="mb-12 flex items-end justify-between gap-8">
           <div>
             <Eyebrow>— 04 / Use Cases</Eyebrow>
-            <h2 className="max-w-2xl text-4xl font-extrabold leading-[1.05] tracking-tight md:text-6xl">Built for every part of hospital infrastructure<span className="text-[#7fae1e]">.</span></h2>
+            <h2 className="max-w-2xl text-4xl font-extrabold leading-[1.05] tracking-tight md:text-6xl">Built for every part of hospital infrastructure<span className="text-[#15803d]">.</span></h2>
           </div>
           <MascotBot size={140} className="hidden lg:block" />
         </div>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {USE_CASES.map(({ n, icon: Icon, title, body }) => (
-            <motion.div key={n} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.45 }}
+            <motion.div key={n} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
               className="group relative overflow-hidden rounded-2xl border border-black/10 bg-white/70 p-6 transition-all hover:-translate-y-1 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.25)]">
               <div className="mb-4 flex items-center justify-between">
                 <span className="font-mono text-xs text-[#101610]/40">{n} —</span>
-                <span className="grid size-8 place-items-center rounded-full border border-black/15 transition-colors group-hover:bg-[#bff23a]"><ArrowRight className="size-4" /></span>
+                <span className="grid size-8 place-items-center rounded-full border border-black/15 transition-colors group-hover:bg-[#22c55e]"><ArrowRight className="size-4" /></span>
               </div>
-              <div className="mb-3 grid size-11 place-items-center rounded-xl bg-[#eef3e0] text-[#7fae1e]"><Icon className="size-5" /></div>
+              <div className="mb-3 grid size-11 place-items-center rounded-xl bg-[#dcfce7] text-[#15803d]"><Icon className="size-5" /></div>
               <h3 className="text-xl font-bold">{title}</h3>
               <p className="mt-2 text-sm text-[#101610]/60">{body}</p>
             </motion.div>
@@ -325,15 +353,15 @@ export default function Landing() {
       {/* TECH STACK */}
       <section id="tech-stack" className="relative z-10 mx-auto max-w-7xl px-6 pb-24">
         <Eyebrow>— 05 / Tech Stack</Eyebrow>
-        <h2 className="mb-4 max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">The real engine under the hood<span className="text-[#7fae1e]">.</span></h2>
+        <h2 className="mb-4 max-w-3xl text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">The real engine under the hood<span className="text-[#15803d]">.</span></h2>
         <p className="mb-12 max-w-xl text-[#101610]/55">Not a mockup — a modular monolith running FastAPI, PostgreSQL and Redis with a live detection pipeline and WebSocket streaming.</p>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {STACK.map(({ group, items }) => (
             <div key={group} className="rounded-2xl border border-black/10 bg-white/70 p-6">
-              <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#101610]/50"><Boxes className="size-4 text-[#7fae1e]" /> {group}</div>
+              <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#101610]/50"><Boxes className="size-4 text-[#15803d]" /> {group}</div>
               <div className="flex flex-wrap gap-2">
                 {items.map((it) => (
-                  <span key={it} className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-sm font-medium"><span className="size-1.5 rounded-full bg-[#7fae1e]" /> {it}</span>
+                  <span key={it} className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-sm font-medium"><span className="size-1.5 rounded-full bg-[#15803d]" /> {it}</span>
                 ))}
               </div>
             </div>
@@ -341,20 +369,20 @@ export default function Landing() {
         </div>
         <div className="mt-6">
           <Marquee pauseOnHover className="[--duration:30s]">
-            {CHIPS.map((c) => (<div key={c} className="mx-2 flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-4 py-1.5 text-sm text-[#101610]/60"><span className="size-1.5 rounded-full bg-[#7fae1e]" /> {c}</div>))}
+            {CHIPS.map((c) => (<div key={c} className="mx-2 flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-4 py-1.5 text-sm text-[#101610]/60"><span className="size-1.5 rounded-full bg-[#15803d]" /> {c}</div>))}
           </Marquee>
         </div>
       </section>
 
       {/* CTA */}
       <section className="relative z-10 mx-auto max-w-7xl px-6 pb-24">
-        <div className="relative overflow-hidden rounded-[2rem] bg-[#101610] px-8 py-20 text-center text-white">
-          <div aria-hidden className="pointer-events-none absolute -bottom-24 left-1/2 size-[28rem] -translate-x-1/2 rounded-full bg-[#bff23a]/30 blur-[110px]" />
+        <div className="relative overflow-hidden rounded-[2rem] bg-[#0b3b2e] px-8 py-20 text-center text-white">
+          <div aria-hidden className="pointer-events-none absolute -bottom-24 left-1/2 size-[28rem] -translate-x-1/2 rounded-full bg-[#22c55e]/30 blur-[110px]" />
           <div className="relative">
             <MascotBot size={130} className="mx-auto mb-4" />
-            <h2 className="mx-auto max-w-2xl text-4xl font-extrabold tracking-tight md:text-6xl">Stay ahead of every incident<span className="text-[#bff23a]">.</span></h2>
+            <h2 className="mx-auto max-w-2xl text-4xl font-extrabold tracking-tight md:text-6xl">Stay ahead of every incident<span className="text-[#22c55e]">.</span></h2>
             <p className="mx-auto mt-4 max-w-xl text-white/60">One platform. Complete visibility. From clinical to operational systems.</p>
-            <Link href="/dashboard" className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#bff23a] px-8 py-4 text-base font-bold text-[#101610] transition-transform hover:scale-[1.03]">Launch Console <ArrowUpRight className="size-4" /></Link>
+            <Link href="/dashboard" className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#22c55e] px-8 py-4 text-base font-bold text-[#101610] transition-transform hover:scale-[1.03]">Launch Console <ArrowUpRight className="size-4" /></Link>
           </div>
         </div>
       </section>
@@ -362,7 +390,7 @@ export default function Landing() {
       {/* FOOTER */}
       <footer className="relative z-10 border-t border-black/10 bg-white/40">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-10 text-sm text-[#101610]/50 md:flex-row">
-          <div className="flex items-center gap-2 font-extrabold text-[#101610]"><span className="grid size-7 place-items-center rounded-lg bg-[#101610] text-[#bff23a]"><Radar className="size-3.5" /></span>MIRA<span className="text-[#7fae1e]">.</span></div>
+          <div className="flex items-center gap-2 font-extrabold text-[#101610]"><span className="grid size-7 place-items-center rounded-lg bg-[#101610] text-[#22c55e]"><Radar className="size-3.5" /></span>MIRA<span className="text-[#15803d]">.</span></div>
           <p>Prototype landing — MIRA real-time log intelligence. Demo, not affiliated with any named entity.</p>
         </div>
       </footer>
