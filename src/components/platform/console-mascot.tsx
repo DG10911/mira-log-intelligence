@@ -1,50 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import dynamic from "next/dynamic";
 
 import { MascotBot } from "@/components/platform/mascot-bot";
+import { MiraBubble } from "@/components/mira/MiraBubble";
+import { useMiraController } from "@/components/mira/MiraController";
+import { TONE_COLOR } from "@/components/mira/MiraState";
 import { useLiveStore } from "@/lib/store/liveStore";
 
+// 3D MIRA loads client-only (three.js touches window); the SVG bot is shown
+// while the GLB streams and as the fallback if WebGL/GLB is unavailable.
+const MiraCanvas = dynamic(() => import("@/components/mira/MiraCanvas"), {
+  ssr: false,
+  loading: () => <MascotBot size={120} eyeColor="#22c55e" interactive />,
+});
+
 /**
- * A persistent AI-agent mascot pinned to the console. Eyes track the mouse
- * (via MascotBot). Surfaces the latest live alert as a speech bubble.
+ * The persistent MIRA assistant pinned to the console (bottom-right). Eyes track
+ * the cursor; hover/click give playful micro-reactions; severity-graded alert
+ * reactions + an accessible bubble are driven by the central MiraController,
+ * which itself only reacts to real backend events (see useMiraEvents).
+ *
+ * Positioned so it never covers navigation, charts, tables or primary actions.
  */
 export function ConsoleMascot() {
-  const alerts = useLiveStore((s) => s.alertBuffer);
   const status = useLiveStore((s) => s.status);
-  const [bubble, setBubble] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (alerts.length === 0) return;
-    const d = alerts[0].data as Record<string, unknown>;
-    const sev = String(d.severity ?? "");
-    const title = String(d.title ?? "Anomaly");
-    setBubble(`${sev ? sev + " · " : ""}${title}`);
-    const t = setTimeout(() => setBubble(null), 5000);
-    return () => clearTimeout(t);
-  }, [alerts]);
+  const tone = useMiraController((s) => s.tone);
+  const glow = TONE_COLOR[tone];
 
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-40 flex flex-col items-end">
-      <AnimatePresence>
-        {bubble && (
-          <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.9 }}
-            className="mb-1 max-w-[220px] rounded-2xl rounded-br-sm border border-lime/30 bg-[#0b1f16]/90 px-3 py-2 text-xs text-white shadow-[0_0_30px] shadow-lime/10 backdrop-blur"
-          >
-            <span className="text-lime">⚠ Signal detected</span>
-            <div className="mt-0.5 text-white/70">{bubble}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="pointer-events-none fixed bottom-4 right-4 z-40 hidden flex-col items-end md:flex">
+      <MiraBubble className="mb-1" />
       <div className="relative">
-        <div className="absolute inset-0 -z-10 rounded-full bg-lime/20 blur-2xl" />
-        <MascotBot size={120} eyeColor="#22c55e" />
+        <div
+          className="absolute inset-0 -z-10 rounded-full blur-2xl transition-colors"
+          style={{ background: `${glow}33` }}
+        />
+        <MiraCanvas size={120} />
         <span
-          className={`absolute right-6 top-2 size-2.5 rounded-full ${
+          aria-hidden
+          title={`connection: ${status}`}
+          className={`pointer-events-none absolute right-6 top-2 size-2.5 rounded-full ${
             status === "connected" ? "bg-lime" : status === "connecting" ? "bg-amber-400" : "bg-red-500"
           } animate-pulse`}
         />

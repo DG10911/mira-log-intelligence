@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
@@ -22,8 +23,10 @@ export function MascotImage({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [t, setT] = useState({ x: 0, y: 0 });
+  const reduced = useReducedMotion();
 
   useEffect(() => {
+    if (reduced) return; // reduced motion: no parallax tracking
     const onMove = (e: MouseEvent) => {
       const el = ref.current;
       if (!el) return;
@@ -37,13 +40,16 @@ export function MascotImage({
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [reduced]);
 
   return (
-    <div
+    <motion.div
       ref={ref}
       className={cn("relative select-none", className)}
       style={{ width: size, height: size, perspective: 900 }}
+      whileHover={reduced ? undefined : { scale: 1.04 }}
+      whileTap={reduced ? undefined : { scale: 0.94 }}
+      transition={{ type: "spring", stiffness: 400, damping: 22 }}
     >
       {glow && (
         <div
@@ -53,9 +59,11 @@ export function MascotImage({
         />
       )}
       <div
-        className="animate-[float_6s_ease-in-out_infinite] size-full"
+        className={cn("size-full", !reduced && "animate-[float_6s_ease-in-out_infinite]")}
         style={{
-          transform: `rotateY(${t.x * 10}deg) rotateX(${-t.y * 8}deg) translate3d(${t.x * 10}px, ${t.y * 8}px, 0)`,
+          transform: reduced
+            ? undefined
+            : `rotateY(${t.x * 10}deg) rotateX(${-t.y * 8}deg) translate3d(${t.x * 10}px, ${t.y * 8}px, 0)`,
           transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
           transformStyle: "preserve-3d",
         }}
@@ -68,6 +76,6 @@ export function MascotImage({
           draggable={false}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }
