@@ -243,9 +243,11 @@ class Pipeline:
                 "id": incident.id, "occurrences": incident.occurrences, "severity": incident.severity,
             })
 
-        # AWS: persist to CloudWatch, publish High/Critical to SNS.
+        # AWS: CloudWatch gets every detection (it's a log sink); SNS fires only
+        # on a NEW incident so a sustained attack sends ONE alert, not hundreds.
         self.aws.emit_log(anomaly_payload)
-        self.aws.publish_alert(alert.severity, alert.title, alert.reason)
+        if is_new:
+            self.aws.publish_alert(alert.severity, alert.title, alert.reason)
 
 
 def snap_service(snap: FeatureSnapshot, signals) -> str:

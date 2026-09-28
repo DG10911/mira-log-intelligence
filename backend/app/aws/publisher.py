@@ -21,6 +21,8 @@ class AWSPublisher:
         self.status = "DOWN"
         self._logs = None
         self._sns = None
+        self._logs_ok = True   # set False on first CloudWatch failure (independent of SNS)
+        self._sns_ok = True    # set False on first SNS failure (independent of CloudWatch)
 
     def connect(self) -> None:
         if not self.settings.aws_enabled:
@@ -55,7 +57,8 @@ class AWSPublisher:
             pass
 
     def emit_log(self, payload: dict) -> None:
-        if self.status not in {"HEALTHY"} or self._logs is None:
+        # Independent of SNS: a CloudWatch permission failure must NOT disable SNS.
+        if self._logs is None or self._logs_ok is False:
             return
         try:
             self._logs.put_log_events(  # sequenceToken now ignored by CloudWatch
@@ -67,13 +70,14 @@ class AWSPublisher:
                 }],
             )
         except Exception as exc:  # noqa: BLE001
-            self.status = "DEGRADED"
-            log.warning("cloudwatch emit failed: %s", exc)
+            self._logs_ok = False  # stop retrying this run; leave SNS unaffected
+            log.warning("cloudwatch emit failed (SNS unaffected): %s", exc)
 
     def publish_alert(self, severity: str, title: str, reason: str) -> None:
         if severity not in {"HIGH", "CRITICAL"}:
             return
-        if self.status != "HEALTHY" or not self.settings.sns_topic_arn or self._sns is None:
+        # Independent of CloudWatch: only needs an SNS client + a topic ARN.
+        if self._sns is None or not self.settings.sns_topic_arn or self._sns_ok is False:
             return
         try:
             self._sns.publish(
@@ -82,5 +86,5 @@ class AWSPublisher:
                 Message=reason,
             )
         except Exception as exc:  # noqa: BLE001
-            self.status = "DEGRADED"
-            log.warning("sns publish failed: %s", exc)
+            self._sns_ok = False
+            log.warning("sns publish failed (CloudWatch unaffected): %s", exc)
