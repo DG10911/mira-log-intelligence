@@ -3,6 +3,16 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 
+# Load backend/.env into the process env so boto3 sees AWS_* credentials
+# (pydantic-settings only maps LOGINTEL_-prefixed keys into Settings).
+try:
+    from dotenv import load_dotenv
+    from pathlib import Path
+
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+except Exception:  # noqa: BLE001  (dotenv optional; env may be set another way)
+    pass
+
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 
